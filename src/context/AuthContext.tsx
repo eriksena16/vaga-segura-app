@@ -1,17 +1,17 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useContext, useEffect, useState } from "react";
 import { User } from "../types/userTypes";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface DataProps {
-  accessToken: string;
-  refreshToken: string;
+  token: string;         // JWT
   userDto?: User | null;
 }
 
 interface AuthContextProps {
   dataReturn: DataProps | null;
-  login: (dataprops: DataProps | null) => void;
-  logout: () => void;
+  login: (dataprops: DataProps | null) => Promise<void>;
+  logout: () => Promise<void>;
+  getToken: () => Promise<string | null>; // Novo helper
 }
 
 export const AuthContext = createContext<AuthContextProps>(
@@ -20,13 +20,11 @@ export const AuthContext = createContext<AuthContextProps>(
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [dataReturn, setData] = useState<DataProps | null>(null);
+  const STORAGE_KEY = "@VagaSeguraToken";
 
   useEffect(() => {
     async function getStorageData() {
-      const storageData = await AsyncStorage.getItem(
-        "@token-AccessControl-Login!"
-      );
-
+      const storageData = await AsyncStorage.getItem(STORAGE_KEY);
       if (storageData) {
         setData(JSON.parse(storageData));
       }
@@ -36,18 +34,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   async function login(dataprops: DataProps | null) {
     setData(dataprops);
-    await AsyncStorage.setItem(
-      "@token-AccessControl-Login!",
-      JSON.stringify(dataprops)
-    );
+    if (dataprops) {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(dataprops));
+    }
   }
+
   async function logout() {
     setData(null);
-    await AsyncStorage.removeItem("@token-AccessControl-Login!");
+    await AsyncStorage.removeItem(STORAGE_KEY);
+  }
+
+  async function getToken(): Promise<string | null> {
+    if (dataReturn?.token) return dataReturn.token;
+    const storageData = await AsyncStorage.getItem(STORAGE_KEY);
+    if (storageData) {
+      const parsed: DataProps = JSON.parse(storageData);
+      return parsed.token;
+    }
+    return null;
   }
 
   return (
-    <AuthContext.Provider value={{ dataReturn, login, logout }}>
+    <AuthContext.Provider value={{ dataReturn, login, logout, getToken }}>
       {children}
     </AuthContext.Provider>
   );
