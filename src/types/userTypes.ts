@@ -1,25 +1,29 @@
-import { AdressType } from "./addressTypes";
 
 export interface User {
   id: string;
-  contaId: number;
   name: string;
   userName: string;
-  photo: string;
-  email: string;
 }
 
-export interface UserLogin{
+export interface UserLogin {
   userName: string;
   passWord: string;
-  logout: () => void;
 }
 
 export interface UserPost {
   name: string;
   userName: string;
-  email: string;
   passWord: string;
-  confirmPassword: string;
-  addres: AdressType;
+}
+export type SpinIconProps = {
+  size?: number;
+  color?: string;
+  duration?: number;
+};
+
+export interface DashboardProps {
+    totalCostumers: number;
+    availableParking: number;
+    occupiedParking: number;
+    paymentPending: number;
 }

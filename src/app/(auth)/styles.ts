@@ -8,6 +8,20 @@ export default StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
   },
+  // Container para erros
+  errorContainer: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: Colors.red, // cor clara de fundo para erro
+    borderRadius: 6,
+  },
+
+  // Texto de erro
+  errorText: {
+    color: Colors.red, // vermelho para destaque
+    fontSize: 14,
+    marginBottom: 4,
+  },
   header: {
     marginTop: 70,
     marginBottom: 36,
@@ -58,7 +72,7 @@ export default StyleSheet.create({
   button: {
     width: "100%",
     height: 50,
-    backgroundColor: Colors.blackBlue,
+    backgroundColor: Colors.secundatyBlue,
     borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
