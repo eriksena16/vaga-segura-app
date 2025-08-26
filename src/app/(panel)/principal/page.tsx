@@ -1,11 +1,8 @@
-import Footer from '@/components/Footer';
 import { setupApiToken } from '@/src/services/api';
 import { getDashboard } from '@/src/services/dashboardService';
 import { DashboardProps } from '@/src/types/userTypes';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons'; // Para ícones
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -35,7 +32,6 @@ const quickActions: QuickAction[] = [
 
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardProps | null>(null);
-  const navigation = useNavigation<StackNavigationProp<any>>();
   useEffect(() => {
     async function fetchDashboard() {
       try {
@@ -113,11 +109,7 @@ export default function DashboardPage() {
         </View>
       </ScrollView>
 
-      {/* Rodapé */}
-      <Footer
-        active={"Home"}
-        onNavigate={(screen) => console.log('Ir para:', screen)}
-      />
+      
     </SafeAreaView>
   );
 }

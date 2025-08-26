@@ -1,33 +1,43 @@
 import { Ionicons } from '@expo/vector-icons';
+import { usePathname, useRouter } from 'expo-router';
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 interface FooterProps {
-  active?: string; // Para indicar a tela ativa
-  onNavigate?: (screen: string) => void; // Callback de navegação
+  active?: string;
+  onNavigate?: (screen: string) => void;
 }
 
 const Footer: React.FC<FooterProps> = ({ active, onNavigate }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const buttons: { key: string; icon: React.ComponentProps<typeof Ionicons>['name']; label: string }[] = [
     { key: '/principal/page', icon: 'home-outline', label: 'Home' },
     { key: '/list/page', icon: 'people-outline', label: 'Clientes' },
-    { key: 'Vagas', icon: 'car-sport-outline', label: 'Vagas' },
-    { key: 'Pagamentos', icon: 'card-outline', label: 'Pagamentos' },
   ];
+
+  const activeKey = active ?? buttons.find(btn => pathname.startsWith(btn.key))?.key;
 
   return (
     <View style={styles.footer}>
       {buttons.map(btn => (
-        <TouchableOpacity 
+        <TouchableOpacity
           key={btn.key} 
           style={styles.footerButton}
-          onPress={() => onNavigate?.(btn.key)}
+          onPress={() => {
+            if (onNavigate) {
+              onNavigate(btn.key);
+            } else {
+              router.push(btn.key as any);
+            }
+          }}
         >
           <Ionicons 
             name={btn.icon} 
             size={24} 
-            color={active === btn.key ? '#3B82F6' : '#1E3A8A'} 
+            color={activeKey === btn.key ? '#3B82F6' : '#1E3A8A'} 
           />
-          <Text style={[styles.footerText, { color: active === btn.key ? '#3B82F6' : '#1E3A8A' }]}>
+          <Text style={[styles.footerText, { color: activeKey === btn.key ? '#3B82F6' : '#1E3A8A' }]}>
             {btn.label}
           </Text>
         </TouchableOpacity>

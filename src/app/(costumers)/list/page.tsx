@@ -1,4 +1,3 @@
-import Footer from "@/components/Footer";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import {
@@ -117,11 +116,7 @@ export default function CustomerList() {
         </TouchableOpacity>
       </View>
 
-      {/* Footer fixo */}
-      <Footer
-        active={"Clientes"}
-        onNavigate={(screen) => console.log("Navegar para:", screen)}
-      />
+      
     </SafeAreaView>
   );
 }
