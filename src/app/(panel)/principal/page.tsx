@@ -24,10 +24,10 @@ type QuickAction = {
 };
 
 const quickActions: QuickAction[] = [
-  { id: '1', title: 'Clientes Adimplentes', icon: 'person', color: '#3B82F6', screen: "/list/page" },
-  { id: '2', title: 'Clientes Inadimplentes', icon: 'warning', color: '#3B82F6', screen: 'Inadimplentes' },
-  { id: '3', title: 'Vagas Disponíveis', icon: 'local-parking', color: '#3B82F6', screen: 'Vagas' },
-  { id: '4', title: 'Registrar Pagamento', icon: 'credit-card', color: '#3B82F6', screen: 'RegistrarPagamento' },
+  { id: '1', title: 'Clientes Adimplentes', icon: 'person', color: '#3B82F6', screen: '/list/page' },
+  { id: '2', title: 'Clientes Inadimplentes', icon: 'warning', color: '#3B82F6', screen: '/list/page' },
+  { id: '3', title: 'Vagas Disponíveis', icon: 'local-parking', color: '#3B82F6', screen: '/principal/page' },
+  { id: '4', title: 'Registrar Pagamento', icon: 'credit-card', color: '#3B82F6', screen: '/principal/page' },
 ];
 
 export default function DashboardPage() {
@@ -66,7 +66,7 @@ export default function DashboardPage() {
             <TouchableOpacity
               key={action.id}
               style={styles.quickCard}
-              onPress={() => router.push("/list/page")}
+              onPress={() => router.push(action.screen as any)}
             >
               <MaterialIcons name={action.icon} size={32} color={action.color} />
               <Text style={styles.quickCardText}>{action.title}</Text>
