@@ -27,3 +27,27 @@ export interface DashboardProps {
     occupiedParking: number;
     paymentPending: number;
 }
+
+export interface CostumerProps {
+  id: string
+  parkingId: string
+  parking?: ParkingProps
+  name: string
+  phone: string
+  plate: string
+  amount: number
+  dueDay: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ParkingProps {
+  id: string
+  status: string
+  location: string
+}
+
+export interface CustomerListProps {
+  customers: CostumerProps[];
+  paid?: boolean;
+};

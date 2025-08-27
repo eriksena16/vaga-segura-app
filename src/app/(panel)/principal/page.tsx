@@ -26,17 +26,44 @@ type QuickAction = {
   routeName: Route;
   params?: Record<string, any>;
 };
-
 const quickActions: QuickAction[] = [
-  { id: '1', title: 'Clientes Adimplentes', icon: 'person', color: '#3B82F6', routeName: '/list/page', params: { status: 'Pago' } },
-  { id: '2', title: 'Clientes Inadimplentes', icon: 'warning', color: '#3B82F6', routeName: '/list/page', params: { status: 'Pendente' } },
-  { id: '3', title: 'Vagas Disponíveis', icon: 'local-parking', color: '#3B82F6', routeName: '/vagas/page' },
-  { id: '4', title: 'Registrar Pagamento', icon: 'credit-card', color: '#3B82F6', routeName: '/pagamentos/registrar/page' },
+  {
+    id: '1',
+    title: 'Clientes Adimplentes',
+    icon: 'person',
+    color: '#3B82F6',
+    routeName: '/list/page',
+    params: { paid: true }, // clientes com paid = true
+  },
+  {
+    id: '2',
+    title: 'Clientes Inadimplentes',
+    icon: 'warning',
+    color: '#3B82F6',
+    routeName: '/list/page',
+    params: { paid: false }, // clientes com paid = false
+  },
+  {
+    id: '3',
+    title: 'Vagas Disponíveis',
+    icon: 'local-parking',
+    color: '#3B82F6',
+    routeName: '/vagas/page',
+  },
+  {
+    id: '4',
+    title: 'Registrar Pagamento',
+    icon: 'credit-card',
+    color: '#3B82F6',
+    routeName: '/pagamentos/registrar/page',
+  },
 ];
+
+
 
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardProps | null>(null);
-  const navigation = useNavigation<any>();
+
   useEffect(() => {
     async function fetchDashboard() {
       try {
@@ -66,18 +93,18 @@ export default function DashboardPage() {
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
         {/* Atalhos Rápidos */}
         <Text style={styles.sectionTitle}>Atalhos</Text>
-       <View style={styles.quickActionsContainer}>
-  {quickActions.map(action => (
-    <TouchableOpacity
-      key={action.id}
-      style={styles.quickCard}
-      onPress={() => router.push({ pathname: action.routeName, params: action.params })}
-    >
-      <MaterialIcons name={action.icon} size={32} color={action.color} />
-      <Text style={styles.quickCardText}>{action.title}</Text>
-    </TouchableOpacity>
-  ))}
-</View>
+        <View style={styles.quickActionsContainer}>
+          {quickActions.map(action => (
+            <TouchableOpacity
+              key={action.id}
+              style={styles.quickCard}
+              onPress={() => router.push({ pathname: action.routeName, params: action.params })}
+            >
+              <MaterialIcons name={action.icon} size={32} color={action.color} />
+              <Text style={styles.quickCardText}>{action.title}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
         {/* Indicadores */}
         <Text style={styles.sectionTitle}>Indicadores</Text>
@@ -114,7 +141,7 @@ export default function DashboardPage() {
         </View>
       </ScrollView>
 
-      
+
     </SafeAreaView>
   );
 }

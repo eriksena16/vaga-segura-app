@@ -1,50 +1,51 @@
+import { getCostumers } from "@/src/services/costumerService";
+import { CostumerProps } from "@/src/types/userTypes";
 import { Ionicons } from "@expo/vector-icons";
-import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import {
-    FlatList,
-    Modal,
-    Pressable,
-    SafeAreaView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  FlatList,
+  Modal,
+  Pressable,
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import styles from "./styles";
 
-export default function CustomerList() {
-  const route = useRoute<any>();
-  const [filters, setFilters] = useState({
-    number: "",
-    plate: "",
-    phone: "",
-    status: "",
-  });
+interface CustomerListPropsAdjusted {
+  customers?: CostumerProps[];
+  paid?: boolean; // true = adimplentes, false = inadimplentes, undefined = todos
+}
 
+export default function CustomerList({paid }: CustomerListPropsAdjusted) {
+  const [filters, setFilters] = useState({ number: "", plate: "", phone: "" });
   const [modalVisible, setModalVisible] = useState(false);
+  const [customerList, setCustomers] = useState<CostumerProps[]>([]);
+// Função para buscar clientes e aplicar filtro
+async function fetchCustomers() {
+  try {
+     console.log("Filtro paid:", paid);
+    const response = await getCostumers({ paid });
+    setCustomers(response);
+  } catch (error) {
+    console.error("Erro ao buscar clientes:", error);
+  }
+}
 
-  const [customers, setCustomers] = useState([
-    { id: 1, name: "João Silva", plate: "ABC-1234", phone: "99999-1111", status: "Pago" },
-    { id: 2, name: "Maria Souza", plate: "XYZ-9876", phone: "98888-2222", status: "Pendente" },
-    { id: 3, name: "Erik Sena", plate: "DEF-4567", phone: "97777-3333", status: "Pago" },
-  ]);
-
-  const initialStatusFilter = (route.params as any)?.status as string | undefined;
   useEffect(() => {
-    if (initialStatusFilter) {
-      setFilters(prev => ({ ...prev, status: initialStatusFilter }));
-    }
-  }, [initialStatusFilter]);
+    fetchCustomers();
+  }, [paid]); // recarrega ao mudar o filtro
 
-  const renderItem = ({ item }: any) => (
+  const renderItem = ({ item }: { item: CostumerProps }) => (
     <View style={styles.customerCard}>
       <View style={styles.customerInfo}>
         <Text style={styles.customerName}>{item.name}</Text>
         <Text style={styles.customerPlate}>{item.plate}</Text>
-        <Text style={[styles.customerStatus, item.status === "Pago" ? styles.paid : styles.pending]}>
-          {item.status}
-        </Text>
+        <Text style={styles.customerPlate}>Telefone: {item.phone}</Text>
+        <Text style={styles.customerPlate}>Vencimento: {item.dueDay}</Text>
+        <Text style={styles.customerPlate}>Número da vaga: {item.parking?.location}</Text>
       </View>
       <View style={styles.actions}>
         <TouchableOpacity style={styles.actionButton}>
@@ -77,26 +78,24 @@ export default function CustomerList() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Filtros</Text>
-
             <TextInput
               style={styles.input}
               placeholder="Nº da Vaga"
               value={filters.number}
-              onChangeText={(text) => setFilters({ ...filters, number: text })}
+              onChangeText={text => setFilters({ ...filters, number: text })}
             />
             <TextInput
               style={styles.input}
               placeholder="Placa"
               value={filters.plate}
-              onChangeText={(text) => setFilters({ ...filters, plate: text })}
+              onChangeText={text => setFilters({ ...filters, plate: text })}
             />
             <TextInput
               style={styles.input}
-              placeholder="Status"
-              value={filters.status}
-              onChangeText={(text) => setFilters({ ...filters, status: text })}
+              placeholder="Telefone"
+              value={filters.phone}
+              onChangeText={text => setFilters({ ...filters, phone: text })}
             />
-
             <View style={styles.modalButtons}>
               <Pressable style={styles.closeButton} onPress={() => setModalVisible(false)}>
                 <Text style={styles.modalButtonText}>Fechar</Text>
@@ -112,8 +111,8 @@ export default function CustomerList() {
       {/* Lista de clientes + botão adicionar */}
       <View style={{ flex: 1 }}>
         <FlatList
-          data={customers}
-          keyExtractor={(item) => item.id.toString()}
+          data={customerList}
+          keyExtractor={item => item.id.toString()}
           renderItem={renderItem}
           contentContainerStyle={{ paddingBottom: 120 }} // espaço para botão + footer
         />
@@ -124,8 +123,6 @@ export default function CustomerList() {
           <Text style={styles.addButtonText}>Adicionar Cliente</Text>
         </TouchableOpacity>
       </View>
-
-      
     </SafeAreaView>
   );
 }
