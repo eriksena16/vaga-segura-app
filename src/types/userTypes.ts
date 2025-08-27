@@ -38,7 +38,8 @@ export interface CostumerProps {
   amount: number
   dueDay: number
   createdAt: string
-  updatedAt: string
+  updatedAt: string,
+  isPaid: string
 }
 
 export interface ParkingProps {

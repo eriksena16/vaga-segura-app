@@ -20,7 +20,7 @@ export default StyleSheet.create({
   filterButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.blackBlue,
+    backgroundColor: Colors.secundatyBlue,
     padding: 12,
     marginTop: 10,
     borderRadius: 12,
@@ -134,17 +134,21 @@ export default StyleSheet.create({
 
   // Botão adicionar cliente
   addButton: {
-    flexDirection: "row",
-    backgroundColor: Colors.blackBlue,
-    padding: 15,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    bottom: 80,
-    left: 20,
-    right: 20,
-  },
+  position: "absolute",
+  bottom: 20,
+  right: 20,
+  flexDirection: "row",
+  alignItems: "center",
+  backgroundColor: Colors.secundatyBlue,
+  paddingVertical: 12,
+  paddingHorizontal: 20,
+  borderRadius: 30,
+  elevation: 5, // sombra no Android
+  shadowColor: "#000", // sombra no iOS
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.3,
+  shadowRadius: 3,
+},
   addButtonText: {
     color: "#fff",
     fontWeight: "bold",

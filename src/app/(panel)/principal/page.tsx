@@ -3,19 +3,12 @@ import { getDashboard } from '@/src/services/dashboardService';
 import { DashboardProps } from '@/src/types/userTypes';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import styles from './styles';
-import { router } from 'expo-router';
 
-// Dados fictícios
-type MaterialIconName =
-  | "person"
-  | "warning"
-  | "local-parking"
-  | "credit-card";
-
+type MaterialIconName = "person" | "warning" | "local-parking" | "credit-card";
 import type { Route } from "expo-router";
 
 type QuickAction = {
@@ -26,6 +19,7 @@ type QuickAction = {
   routeName: Route;
   params?: Record<string, any>;
 };
+
 const quickActions: QuickAction[] = [
   {
     id: '1',
@@ -33,7 +27,7 @@ const quickActions: QuickAction[] = [
     icon: 'person',
     color: '#3B82F6',
     routeName: '/list/page',
-    params: { paid: true }, // clientes com paid = true
+    params: { paid: 'true' }, // string para URL
   },
   {
     id: '2',
@@ -41,7 +35,7 @@ const quickActions: QuickAction[] = [
     icon: 'warning',
     color: '#3B82F6',
     routeName: '/list/page',
-    params: { paid: false }, // clientes com paid = false
+    params: { paid: 'false' }, // string para URL
   },
   {
     id: '3',
@@ -59,8 +53,6 @@ const quickActions: QuickAction[] = [
   },
 ];
 
-
-
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardProps | null>(null);
 
@@ -68,22 +60,18 @@ export default function DashboardPage() {
     async function fetchDashboard() {
       try {
         const token = await AsyncStorage.getItem("accessToken");
-        console.log("Token:", token);
         setupApiToken(token ?? undefined);
         const result = await getDashboard();
         setData(result);
       } catch (error) {
         console.log('Erro ao buscar dashboard:', error);
-      } finally {
-        // setLoading(false);
       }
     }
-
     fetchDashboard();
   }, []);
+
   return (
     <SafeAreaView style={styles.container}>
-
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.logo}>Dashboard</Text>
@@ -133,17 +121,12 @@ export default function DashboardPage() {
             </Text>
           </View>
 
-
           <View style={styles.indicatorCard}>
             <Text style={styles.indicatorTitle}>Pagamentos Pendentes</Text>
             <Text style={[styles.indicatorValue, { color: 'red' }]}>{data?.paymentPending || 0}</Text>
           </View>
         </View>
       </ScrollView>
-
-
     </SafeAreaView>
   );
 }
-
-

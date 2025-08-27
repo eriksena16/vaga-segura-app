@@ -1,6 +1,7 @@
 import { getCostumers } from "@/src/services/costumerService";
 import { CostumerProps } from "@/src/types/userTypes";
 import { Ionicons } from "@expo/vector-icons";
+import { useSearchParams } from "expo-router/build/hooks";
 import { useEffect, useState } from "react";
 import {
   FlatList,
@@ -16,36 +17,47 @@ import styles from "./styles";
 
 interface CustomerListPropsAdjusted {
   customers?: CostumerProps[];
-  paid?: boolean; // true = adimplentes, false = inadimplentes, undefined = todos
 }
 
-export default function CustomerList({paid }: CustomerListPropsAdjusted) {
+export default function CustomerList({ customers }: CustomerListPropsAdjusted) {
   const [filters, setFilters] = useState({ number: "", plate: "", phone: "" });
   const [modalVisible, setModalVisible] = useState(false);
-  const [customerList, setCustomers] = useState<CostumerProps[]>([]);
-// Função para buscar clientes e aplicar filtro
-async function fetchCustomers() {
-  try {
-     console.log("Filtro paid:", paid);
-    const response = await getCostumers({ paid });
-    setCustomers(response);
-  } catch (error) {
-    console.error("Erro ao buscar clientes:", error);
+  const [customerList, setCustomers] = useState<CostumerProps[]>(customers || []);
+
+  const params = useSearchParams();
+
+  const paidParam = params.get?.("paid");
+  const paidFilter =
+    paidParam === "true" ? true :
+      paidParam === "false" ? false :
+        undefined;
+
+  async function fetchCustomers() {
+    try {
+      console.log("Filtro paid:", paidFilter);
+      const response = await getCostumers({ paid: paidFilter });
+      setCustomers(response);
+    } catch (error) {
+      console.error("Erro ao buscar clientes:", error);
+    }
   }
-}
 
   useEffect(() => {
     fetchCustomers();
-  }, [paid]); // recarrega ao mudar o filtro
+  }, [paidFilter]);
 
   const renderItem = ({ item }: { item: CostumerProps }) => (
     <View style={styles.customerCard}>
       <View style={styles.customerInfo}>
         <Text style={styles.customerName}>{item.name}</Text>
-        <Text style={styles.customerPlate}>{item.plate}</Text>
+        <Text style={styles.customerPlate}>Placa: {item.plate}</Text>
         <Text style={styles.customerPlate}>Telefone: {item.phone}</Text>
         <Text style={styles.customerPlate}>Vencimento: {item.dueDay}</Text>
         <Text style={styles.customerPlate}>Número da vaga: {item.parking?.location}</Text>
+        <Text style={[styles.customerStatus, item.isPaid ? styles.paid : styles.pending]}>
+          {item.isPaid ? "Adimplente" : "Inadimplente"}
+        </Text>
+
       </View>
       <View style={styles.actions}>
         <TouchableOpacity style={styles.actionButton}>
@@ -117,12 +129,12 @@ async function fetchCustomers() {
           contentContainerStyle={{ paddingBottom: 120 }} // espaço para botão + footer
         />
 
+      </View>
         {/* Botão Adicionar Cliente */}
         <TouchableOpacity style={styles.addButton}>
           <Ionicons name="add" size={24} color="#fff" />
           <Text style={styles.addButtonText}>Adicionar Cliente</Text>
         </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }

@@ -9,9 +9,7 @@ export async function getCostumers(params?: { paid?: boolean }): Promise<Costume
   const fullUrl = NEXT_PUBLIC_API_URL + COSTUMERS + query;
 
   console.log("URL da API:", fullUrl);
-  console.log("Parâmetro 'paid':", params?.paid);
 
-  // Faz a requisição passando os params (Axios converte automaticamente em query string)
   const response = await api.get(COSTUMERS, {
     params: {
       paid: params?.paid

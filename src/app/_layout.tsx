@@ -17,7 +17,7 @@ function MainLayout() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (dataReturn?.token && isTokenValid(dataReturn.token)) {
-        router.replace("/principal/page"); 
+        router.replace("/principal/page");
       } else {
         router.replace("/(auth)/page"); 
       }
