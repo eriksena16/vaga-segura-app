@@ -31,11 +31,20 @@ export default function CustomerList() {
   ]);
 
   const initialStatusFilter = (route.params as any)?.status as string | undefined;
+  const initialPaidFilter = (route.params as any)?.paid as boolean | undefined;
   useEffect(() => {
     if (initialStatusFilter) {
       setFilters(prev => ({ ...prev, status: initialStatusFilter }));
     }
   }, [initialStatusFilter]);
+
+  useEffect(() => {
+    // Aqui futuramente você pode chamar o serviço real passando paid
+    // Por enquanto apenas loga para confirmar o recebimento do parâmetro
+    if (typeof initialPaidFilter !== 'undefined') {
+      console.log('Filtro paid recebido via rota:', initialPaidFilter);
+    }
+  }, [initialPaidFilter]);
 
   const renderItem = ({ item }: any) => (
     <View style={styles.customerCard}>

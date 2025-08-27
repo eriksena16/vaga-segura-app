@@ -28,8 +28,8 @@ type QuickAction = {
 };
 
 const quickActions: QuickAction[] = [
-  { id: '1', title: 'Clientes Adimplentes', icon: 'person', color: '#3B82F6', routeName: '/list/page', params: { status: 'Pago' } },
-  { id: '2', title: 'Clientes Inadimplentes', icon: 'warning', color: '#3B82F6', routeName: '/list/page', params: { status: 'Pendente' } },
+  { id: '1', title: 'Clientes Adimplentes', icon: 'person', color: '#3B82F6', routeName: '/list/page', params: { paid: true, status: 'Pago' } },
+  { id: '2', title: 'Clientes Inadimplentes', icon: 'warning', color: '#3B82F6', routeName: '/list/page', params: { paid: false, status: 'Pendente' } },
   { id: '3', title: 'Vagas Disponíveis', icon: 'local-parking', color: '#3B82F6', routeName: '/vagas/page' },
   { id: '4', title: 'Registrar Pagamento', icon: 'credit-card', color: '#3B82F6', routeName: '/pagamentos/registrar/page' },
 ];
