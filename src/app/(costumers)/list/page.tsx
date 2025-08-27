@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useRoute } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 import {
     FlatList,
     Modal,
@@ -13,6 +14,7 @@ import {
 import styles from "./styles";
 
 export default function CustomerList() {
+  const route = useRoute<any>();
   const [filters, setFilters] = useState({
     number: "",
     plate: "",
@@ -27,6 +29,13 @@ export default function CustomerList() {
     { id: 2, name: "Maria Souza", plate: "XYZ-9876", phone: "98888-2222", status: "Pendente" },
     { id: 3, name: "Erik Sena", plate: "DEF-4567", phone: "97777-3333", status: "Pago" },
   ]);
+
+  const initialStatusFilter = (route.params as any)?.status as string | undefined;
+  useEffect(() => {
+    if (initialStatusFilter) {
+      setFilters(prev => ({ ...prev, status: initialStatusFilter }));
+    }
+  }, [initialStatusFilter]);
 
   const renderItem = ({ item }: any) => (
     <View style={styles.customerCard}>

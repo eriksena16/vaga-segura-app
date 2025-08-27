@@ -1,14 +1,14 @@
 import Colors from "@/constants/Colors";
-import { useRouter } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 import { useEffect } from "react";
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 export default function Home() {
-  const router = useRouter();
+  const navigation = useNavigation<any>();
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.replace("/(auth)/page");
+      navigation.reset({ index: 0, routes: [{ name: '/(auth)/page' as never }] as any });
     }, 3000);
 
     return () => clearTimeout(timer);

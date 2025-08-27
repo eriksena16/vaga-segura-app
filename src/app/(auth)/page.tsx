@@ -7,13 +7,14 @@ import { UserLogin } from "@/src/types/userTypes";
 import { delay } from "@/src/utils/delay";
 import { useFormState } from "@/src/utils/useStatePersolaize";
 import { Ionicons } from '@expo/vector-icons';
-import { router } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import styles from "./styles";
 
 export default function Login() {
   const { login } = useAuth();
+  const navigation = useNavigation<any>();
 
   const { state: form, updateField } = useFormState<UserLogin>({
     userName: "",
@@ -48,7 +49,7 @@ export default function Login() {
         login({ token: response.token });
 
         await delay(2000);
-        router.push("/principal/page");
+        navigation.navigate('/principal/page');
       }
     } catch (err) {
       updateErrorField("returnError", true);
