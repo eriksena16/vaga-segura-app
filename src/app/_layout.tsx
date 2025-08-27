@@ -1,7 +1,7 @@
-import { Stack } from "expo-router";
-import { useNavigation } from "@react-navigation/native";
+import { Stack, router } from "expo-router";
 import { useEffect } from "react";
 import { AuthProvider, useAuth } from "../context/AuthContext";
+import { isTokenValid } from "../utils/jwt";
 
 export default function RootLayout() {
   return (
@@ -12,22 +12,21 @@ export default function RootLayout() {
 }
 
 function MainLayout() {
-  const { dataReturn} = useAuth();
-  const navigation = useNavigation<any>();
+  const { dataReturn } = useAuth();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (dataReturn?.token) {
-        navigation.reset({ index: 0, routes: [{ name: '/principal/page' as never }] as any });
-        return;
+      if (dataReturn?.token && isTokenValid(dataReturn.token)) {
+        router.replace("/principal/page"); 
       } else {
-        navigation.reset({ index: 0, routes: [{ name: '/(auth)/page' as never }] as any });
-        return;
+        router.replace("/(auth)/page"); 
       }
     }, 500);
 
     return () => clearTimeout(timeout);
-  }, []);
+  }, [dataReturn]);
 
-  return <Stack screenOptions={{ headerShown: false }}></Stack>;
+  return <Stack screenOptions={{ headerShown: false }} />;
 }
+
+

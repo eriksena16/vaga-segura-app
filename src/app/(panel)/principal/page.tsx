@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import styles from './styles';
+import { router } from 'expo-router';
 
 // Dados fictícios
 type MaterialIconName =
@@ -15,12 +16,14 @@ type MaterialIconName =
   | "local-parking"
   | "credit-card";
 
+import type { Route } from "expo-router";
+
 type QuickAction = {
   id: string;
   title: string;
   icon: MaterialIconName;
   color: string;
-  routeName: string;
+  routeName: Route;
   params?: Record<string, any>;
 };
 
@@ -63,18 +66,18 @@ export default function DashboardPage() {
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
         {/* Atalhos Rápidos */}
         <Text style={styles.sectionTitle}>Atalhos</Text>
-        <View style={styles.quickActionsContainer}>
-          {quickActions.map(action => (
-            <TouchableOpacity
-              key={action.id}
-              style={styles.quickCard}
-              onPress={() => navigation.navigate(action.routeName as never, action.params as never)}
-            >
-              <MaterialIcons name={action.icon} size={32} color={action.color} />
-              <Text style={styles.quickCardText}>{action.title}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+       <View style={styles.quickActionsContainer}>
+  {quickActions.map(action => (
+    <TouchableOpacity
+      key={action.id}
+      style={styles.quickCard}
+      onPress={() => router.push({ pathname: action.routeName, params: action.params })}
+    >
+      <MaterialIcons name={action.icon} size={32} color={action.color} />
+      <Text style={styles.quickCardText}>{action.title}</Text>
+    </TouchableOpacity>
+  ))}
+</View>
 
         {/* Indicadores */}
         <Text style={styles.sectionTitle}>Indicadores</Text>

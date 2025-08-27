@@ -8,7 +8,10 @@ export default function Home() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.reset({ index: 0, routes: [{ name: '/(auth)/page' as never }] as any });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
     }, 3000);
 
     return () => clearTimeout(timer);
