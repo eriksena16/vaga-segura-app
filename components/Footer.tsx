@@ -5,16 +5,15 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface FooterProps {
   active?: string;
-  onNavigate?: (screen: string) => void;
 }
 
-const Footer: React.FC<FooterProps> = ({ active, onNavigate }) => {
+const Footer: React.FC<FooterProps> = ({ active }) => {
   const pathname = usePathname();
 
   // Defina os caminhos exatos das suas rotas no Expo Router
-  const buttons: { key: "/principal" | "/list"; icon: React.ComponentProps<typeof Ionicons>['name']; label: string }[] = [
-    { key: '/principal', icon: 'home-outline', label: 'Home' },
-    { key: '/list', icon: 'people-outline', label: 'Clientes' },
+  const buttons: { key: "/principal/page" | "/list/page"; icon: React.ComponentProps<typeof Ionicons>['name']; label: string }[] = [
+    { key: '/principal/page', icon: 'home-outline', label: 'Home' },
+    { key: '/list/page', icon: 'people-outline', label: 'Clientes' },
   ];
 
   const activeKey = active ?? buttons.find((btn) => pathname.startsWith(btn.key))?.key;
@@ -26,11 +25,7 @@ const Footer: React.FC<FooterProps> = ({ active, onNavigate }) => {
           key={btn.key}
           style={styles.footerButton}
           onPress={() => {
-            if (onNavigate) {
-              onNavigate(btn.key);
-            } else {
-              router.push(btn.key as any);
-            }
+            router.push(btn.key as any);
           }}
         >
           <Ionicons
