@@ -3,7 +3,7 @@ import { getDashboard } from '@/src/services/dashboardService';
 import { DashboardProps } from '@/src/types/userTypes';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { router } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import styles from './styles';
@@ -20,18 +20,20 @@ type QuickAction = {
   title: string;
   icon: MaterialIconName;
   color: string;
-  screen: string;
+  routeName: string;
+  params?: Record<string, any>;
 };
 
 const quickActions: QuickAction[] = [
-  { id: '1', title: 'Clientes Adimplentes', icon: 'person', color: '#3B82F6', screen: "/list/page" },
-  { id: '2', title: 'Clientes Inadimplentes', icon: 'warning', color: '#3B82F6', screen: 'Inadimplentes' },
-  { id: '3', title: 'Vagas Disponíveis', icon: 'local-parking', color: '#3B82F6', screen: 'Vagas' },
-  { id: '4', title: 'Registrar Pagamento', icon: 'credit-card', color: '#3B82F6', screen: 'RegistrarPagamento' },
+  { id: '1', title: 'Clientes Adimplentes', icon: 'person', color: '#3B82F6', routeName: '/list/page', params: { status: 'Pago' } },
+  { id: '2', title: 'Clientes Inadimplentes', icon: 'warning', color: '#3B82F6', routeName: '/list/page', params: { status: 'Pendente' } },
+  { id: '3', title: 'Vagas Disponíveis', icon: 'local-parking', color: '#3B82F6', routeName: '/vagas/page' },
+  { id: '4', title: 'Registrar Pagamento', icon: 'credit-card', color: '#3B82F6', routeName: '/pagamentos/registrar/page' },
 ];
 
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardProps | null>(null);
+  const navigation = useNavigation<any>();
   useEffect(() => {
     async function fetchDashboard() {
       try {
@@ -66,7 +68,7 @@ export default function DashboardPage() {
             <TouchableOpacity
               key={action.id}
               style={styles.quickCard}
-              onPress={() => router.push("/list/page")}
+              onPress={() => navigation.navigate(action.routeName as never, action.params as never)}
             >
               <MaterialIcons name={action.icon} size={32} color={action.color} />
               <Text style={styles.quickCardText}>{action.title}</Text>

@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { usePathname, useRouter } from 'expo-router';
+import { usePathname } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 interface FooterProps {
@@ -8,7 +9,7 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ active, onNavigate }) => {
-  const router = useRouter();
+  const navigation = useNavigation<any>();
   const pathname = usePathname();
 
   const buttons: { key: string; icon: React.ComponentProps<typeof Ionicons>['name']; label: string }[] = [
@@ -28,7 +29,7 @@ const Footer: React.FC<FooterProps> = ({ active, onNavigate }) => {
             if (onNavigate) {
               onNavigate(btn.key);
             } else {
-              router.push(btn.key as any);
+              navigation.navigate(btn.key as never);
             }
           }}
         >
