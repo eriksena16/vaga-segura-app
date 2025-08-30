@@ -4,3 +4,5 @@ export const AUTH_LOGIN = "/auth/login"
 export const AUTH_REGISTER = "/auth/user-create";
 export const DASHBOARD = "/get-dashboard";
 export const COSTUMERS = "/costumers";
+export const PARKINGS = "/parkings";
+export const PAYMENTS = "/payments";

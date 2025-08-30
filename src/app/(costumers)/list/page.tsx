@@ -1,5 +1,5 @@
 import { getCostumers } from "@/src/services/costumerService";
-import { CostumerProps } from "@/src/types/userTypes";
+import { CostumerProps, CustomerListProps } from "@/src/types/userTypes";
 import { Ionicons } from "@expo/vector-icons";
 import { useSearchParams } from "expo-router/build/hooks";
 import { useEffect, useState } from "react";
@@ -15,11 +15,7 @@ import {
 } from "react-native";
 import styles from "./styles";
 
-interface CustomerListPropsAdjusted {
-  customers?: CostumerProps[];
-}
-
-export default function CustomerList({ customers }: CustomerListPropsAdjusted) {
+export default function CustomerList({ customers }: CustomerListProps) {
   const [filters, setFilters] = useState({ number: "", plate: "", phone: "" });
   const [modalVisible, setModalVisible] = useState(false);
   const [customerList, setCustomers] = useState<CostumerProps[]>(customers || []);

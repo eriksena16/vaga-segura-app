@@ -3,13 +3,13 @@ import { getDashboard } from '@/src/services/dashboardService';
 import { DashboardProps } from '@/src/types/userTypes';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { Route } from "expo-router";
 import { router } from 'expo-router';
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import styles from './styles';
 
 type MaterialIconName = "person" | "warning" | "local-parking" | "credit-card";
-import type { Route } from "expo-router";
 
 type QuickAction = {
   id: string;
@@ -27,7 +27,7 @@ const quickActions: QuickAction[] = [
     icon: 'person',
     color: '#3B82F6',
     routeName: '/list/page',
-    params: { paid: 'true' }, // string para URL
+    params: { paid: 'true' },
   },
   {
     id: '2',
@@ -35,7 +35,7 @@ const quickActions: QuickAction[] = [
     icon: 'warning',
     color: '#3B82F6',
     routeName: '/list/page',
-    params: { paid: 'false' }, // string para URL
+    params: { paid: 'false' },
   },
   {
     id: '3',
@@ -49,7 +49,8 @@ const quickActions: QuickAction[] = [
     title: 'Registrar Pagamento',
     icon: 'credit-card',
     color: '#3B82F6',
-    routeName: '/pagamentos/registrar/page',
+    routeName: '/pagamentos/page',
+    params: { paid: 'false' },
   },
 ];
 
