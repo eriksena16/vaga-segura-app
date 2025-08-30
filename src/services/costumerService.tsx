@@ -35,5 +35,21 @@ export async function getPayments(params?: { paid?: boolean }): Promise<PaymentP
   return handleApiResponse<PaymentProps[]>(response);
 }
 
+export async function confirmePayment(data: { costumerId?: string; paymentId: string }): Promise<void> {
+  try {
 
+    const url = `/costumer/${data.costumerId}/payment-confirm/${data.paymentId}`;
 
+    console.log("URL da API para confirmar pagamento:", NEXT_PUBLIC_API_URL + url);
+
+    const response = await api.post(url, {
+      costumerId: data.costumerId,
+      paymentId: data.paymentId,
+    });
+    
+    return handleApiResponse<void>(response);
+  } catch (error) {
+    console.error("Erro ao confirmar pagamento:", error);
+    throw error;
+  }
+}

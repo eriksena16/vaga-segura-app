@@ -6,3 +6,4 @@ export const DASHBOARD = "/get-dashboard";
 export const COSTUMERS = "/costumers";
 export const PARKINGS = "/parkings";
 export const PAYMENTS = "/payments";
+export const CONFIRM_PAYMENT = "/confirm-payment";

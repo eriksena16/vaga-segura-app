@@ -1,4 +1,4 @@
-import { getPayments } from "@/src/services/costumerService";
+import { confirmePayment, getPayments } from "@/src/services/costumerService";
 import { PaymentListProps, PaymentProps } from "@/src/types/userTypes";
 import { useSearchParams } from "expo-router/build/hooks";
 import React, { useEffect, useState } from "react";
@@ -9,8 +9,8 @@ export default function PaymentList({ payments }: PaymentListProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const [paymentSelecionado, setPaymentSelecionado] = useState<PaymentProps | null>(null);
   const [paymentList, setPaymentList] = useState<PaymentProps[]>(payments || []);
-  const params = useSearchParams();
 
+  const params = useSearchParams();
   const paidParam = params.get?.("paid");
   const paidFilter =
     paidParam === "true" ? true :
@@ -30,27 +30,49 @@ export default function PaymentList({ payments }: PaymentListProps) {
   useEffect(() => {
     fetchPayments();
   }, [paidFilter]);
-  
-  const confirmarPayment = () => {
-    if (paymentSelecionado) {
+
+
+const confirmarPayment = async () => {
+  if (paymentSelecionado) {
+    try {
+      // Chama sua API
+      await confirmePayment({
+        costumerId: paymentSelecionado.costumer?.id,
+        paymentId: paymentSelecionado.id,
+      });
+
+      // Atualiza estado local só se API der certo
       setPaymentList(prev =>
         prev.map(p =>
-          p.id === paymentSelecionado.id ? { ...p, paymentSatus: "Paid" } : p
+          p.id === paymentSelecionado.id
+            ? { ...p, paymentSatus: "Paid" }
+            : p
         )
       );
+    } catch (error) {
+      console.error("Erro ao confirmar pagamento:", error);
+      // opcional: mostrar toast ou alerta
+    } finally {
+      setModalVisible(false);
     }
-    setModalVisible(false);
-  };
+  }
+};
+
 
   const renderItem = ({ item }: { item: PaymentProps }) => (
     <View style={styles.card}>
       <Text style={styles.cliente}>{item.costumer?.name}</Text>
       <Text style={styles.texto}>Valor: R$ {item.amount}</Text>
       <Text style={styles.texto}>Data: {item.dueDate}</Text>
-      <Text style={[styles.texto, item.paymentSatus === "Paid" && styles.statusPago]}>
-        Status: {item.paymentSatus}
+      <Text
+        style={[
+          styles.texto,
+          item.paymentSatus === "Paid" ? styles.statusPago : styles.statusPendente,
+        ]}
+      >
+        Status: {item.paymentSatus === "Paid" ? "Pago" : "Pendente"}
       </Text>
-
+      <Text style={styles.texto}>Número da vaga: {item.costumer?.parking?.location}</Text>
       {item.paymentSatus === "Pending" && (
         <TouchableOpacity
           style={styles.botao}
@@ -67,11 +89,13 @@ export default function PaymentList({ payments }: PaymentListProps) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Pagamentos Pendentes</Text>
+      <Text style={styles.titulo}>Pagamentos</Text>
+
       <FlatList
-        data={payments.filter(p => p.paymentSatus === "Pending")}
+        data={paymentList} // usa o state atualizado
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
+        contentContainerStyle={{ paddingBottom: 120 }}
       />
 
       {/* Modal de Confirmação */}
@@ -95,5 +119,4 @@ export default function PaymentList({ payments }: PaymentListProps) {
       </Modal>
     </View>
   );
-};
-
+}

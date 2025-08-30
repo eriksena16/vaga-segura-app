@@ -37,6 +37,10 @@ export default StyleSheet.create({
     color: "green",
     fontWeight: "bold",
   },
+  statusPendente: {
+    color: "red",
+    fontWeight: "bold",
+  },
   botao: {
     backgroundColor: "#3B82F6",
     paddingVertical: 8,

@@ -29,7 +29,8 @@ export interface DashboardProps {
 }
 
 export interface PaymentProps {
-  id: number;
+  id: string;
+  costumerId: string;
   costumer?: CostumerProps;
   amount: number;
   dueDate: string;
