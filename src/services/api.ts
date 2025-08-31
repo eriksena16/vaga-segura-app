@@ -15,14 +15,27 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
-// Interceptor para tratar erros de resposta
 export function setupResponseInterceptor(logout: () => void) {
   api.interceptors.response.use(
-    (response) => response,
+    (response) => {
+      // Aqui você pode tratar sucesso de forma centralizada, se quiser
+      if (response.data && !response.data.success && response.data.resons) {
+        return Promise.reject(new Error(response.data.resons.join(", ")));
+      }
+      return response;
+    },
     (error: AxiosError) => {
       if (error.response?.status === 401) {
         logout();
       }
+
+      if (error.response?.data) {
+        const apiData = error.response.data as any;
+        if (apiData.resons) {
+          return Promise.reject(new Error(apiData.resons.join(", ")));
+        }
+      }
+
       return Promise.reject(error);
     }
   );

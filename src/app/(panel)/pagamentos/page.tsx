@@ -1,23 +1,27 @@
+import ErrorModal from "@/components/errorModal";
+import Colors from "@/constants/Colors";
 import { confirmePayment, getPayments } from "@/src/services/costumerService";
 import { PaymentListProps, PaymentProps } from "@/src/types/userTypes";
 import { useSearchParams } from "expo-router/build/hooks";
-import React, { useEffect, useState } from "react";
-import { Button, FlatList, Modal, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { Button, FlatList, Modal, RefreshControl, Text, TouchableOpacity, View } from "react-native";
 import styles from "./styles";
 
 export default function PaymentList({ payments }: PaymentListProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const [paymentSelecionado, setPaymentSelecionado] = useState<PaymentProps | null>(null);
   const [paymentList, setPaymentList] = useState<PaymentProps[]>(payments || []);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   const params = useSearchParams();
   const paidParam = params.get?.("paid");
   const paidFilter =
     paidParam === "true" ? true :
-      paidParam === "false" ? false :
-        undefined;
+    paidParam === "false" ? false :
+    undefined;
 
-  async function fetchPayments() {
+  const fetchPayments = useCallback(async () => {
     try {
       console.log("Filtro paid:", paidFilter);
       const response = await getPayments({ paid: paidFilter });
@@ -25,33 +29,36 @@ export default function PaymentList({ payments }: PaymentListProps) {
     } catch (error) {
       console.error("Erro ao buscar pagamentos:", error);
     }
-  }
+  }, [paidFilter]);
 
   useEffect(() => {
     fetchPayments();
-  }, [paidFilter]);
+  }, [fetchPayments]);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchPayments();
+    setRefreshing(false);
+  }, [fetchPayments]);
 
-const confirmarPayment = async () => {
+ const confirmarPayment = async () => {
   if (paymentSelecionado) {
     try {
-      // Chama sua API
+      // Chama a API para confirmar pagamento
       await confirmePayment({
         costumerId: paymentSelecionado.costumer?.id,
         paymentId: paymentSelecionado.id,
       });
 
-      // Atualiza estado local só se API der certo
-      setPaymentList(prev =>
-        prev.map(p =>
-          p.id === paymentSelecionado.id
-            ? { ...p, paymentSatus: "Paid" }
-            : p
-        )
-      );
-    } catch (error) {
-      console.error("Erro ao confirmar pagamento:", error);
-      // opcional: mostrar toast ou alerta
+      // Atualiza a lista chamando novamente a API
+      await fetchPayments();
+
+    } catch (error: any) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("Ocorreu um erro inesperado.");
+      }
     } finally {
       setModalVisible(false);
     }
@@ -92,10 +99,18 @@ const confirmarPayment = async () => {
       <Text style={styles.titulo}>Pagamentos</Text>
 
       <FlatList
-        data={paymentList} // usa o state atualizado
+        data={paymentList}
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
         contentContainerStyle={{ paddingBottom: 120 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[Colors.secundatyBlue]}
+            tintColor={Colors.secundatyBlue}
+          />
+        }
       />
 
       {/* Modal de Confirmação */}
@@ -117,6 +132,14 @@ const confirmarPayment = async () => {
           </View>
         </View>
       </Modal>
+
+      {errorMessage && (
+        <ErrorModal
+          visible={!!errorMessage}
+          message={errorMessage}
+          onClose={() => setErrorMessage(null)}
+        />
+      )}
     </View>
   );
 }

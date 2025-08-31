@@ -1,3 +1,4 @@
+import ErrorModal from "@/components/errorModal";
 import SpinIcon from "@/components/spin";
 import Colors from "@/constants/Colors";
 import { useAuth } from "@/src/context/AuthContext";
@@ -22,6 +23,8 @@ export default function Login() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [onClickButton, setClickButton] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const { state: returnError, updateField: updateErrorField } = useFormState<defaultErroProps>({
     errors: { errors: [""], success: false },
@@ -41,19 +44,19 @@ export default function Login() {
     try {
       const response = await loginUser(form);
 
-      if ("errors" in response) {
-        updateErrorField("returnError", true);
-        updateErrorField("errors", response);
-      } else {
-        login({ token: response.token });
+      login({ token: response.token });
+      await delay(2000);
+      router.replace('/principal/page');
 
-        await delay(2000);
-        router.replace('/principal/page');
+    } catch (error: any) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message); // pega a mensagem do throw
+      } else {
+        setErrorMessage("Ocorreu um erro inesperado.");
       }
-    } catch (err) {
-      updateErrorField("returnError", true);
-      updateErrorField("errors", { success: false, errors: ["Erro ao conectar com a API"] });
-    } finally {
+    }
+    finally {
+      setModalVisible(false);
       setClickButton(false);
     }
   }
@@ -119,15 +122,13 @@ export default function Login() {
           </TouchableOpacity>
 
           {/* Exibir erros */}
-          {returnError?.returnError && returnError.errors.errors.length > 0 && (
-            <View style={styles.errorContainer}>
-              {returnError.errors.errors.map((err, idx) => (
-                <Text key={idx} style={styles.errorText}>
-                  {err}
-                </Text>
-              ))}
-            </View>
-          )}
+          {errorMessage && (
+                 <ErrorModal
+                   visible={!!errorMessage}
+                   message={errorMessage}
+                   onClose={() => setErrorMessage(null)}
+                 />
+               )}
         </View>
       </View>
     </SafeAreaView>

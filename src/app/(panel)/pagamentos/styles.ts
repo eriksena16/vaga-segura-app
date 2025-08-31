@@ -1,10 +1,11 @@
+import Colors from "@/constants/Colors";
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: "#FFFFFF",
   },
   titulo: {
     fontSize: 22,
@@ -14,7 +15,7 @@ export default StyleSheet.create({
     color: "#1E3A8A",
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: Colors.lightGray,
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,

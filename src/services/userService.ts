@@ -1,4 +1,3 @@
-import axios from "axios";
 import { DataProps } from "../context/AuthContext";
 import { erroProps } from "../types/errorTypes";
 import { UserLogin, UserPost } from "../types/userTypes";
@@ -38,7 +37,7 @@ export async function postUserData(
 
 export async function loginUser(
   userlogin: UserLogin
-): Promise<erroProps | DataProps> {
+): Promise<DataProps> {
   try {
 
 
@@ -56,32 +55,6 @@ export async function loginUser(
     await setupApiToken(response?.data.token);
     return response?.data;
   } catch (error: any) {
-    if (axios.isCancel(error)) {
-      return <erroProps>{
-        success: false,
-        errors: ["servidor fora do ar"],
-      };
-    } else {
-      if (error.response) {
-        const message = Object.values(error.response.data.errors);
-        return <erroProps>{
-          success: false,
-          errors: message,
-        };
-      }
-    }
-    if (error.response?.data) {
-      const message = Object.values(error.response.data.errors);
-
-      return <erroProps>{
-        success: false,
-        errors: message,
-      };
-    } else {
-      return <erroProps>{
-        success: false,
-        errors: ["Erro ao se conectar com o servidor"],
-      };
-    }
+    throw error;
   }
 }

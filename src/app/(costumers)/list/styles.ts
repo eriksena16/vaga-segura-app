@@ -91,7 +91,7 @@ export default StyleSheet.create({
 
   // Lista de clientes
   customerCard: {
-    backgroundColor: "#F3F4F6",
+    backgroundColor: Colors.lightGray,
     borderRadius: 15,
     padding: 15,
     marginBottom: 15,

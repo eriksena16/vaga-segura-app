@@ -1,6 +1,7 @@
 import { Stack, router } from "expo-router";
 import { useEffect } from "react";
 import { AuthProvider, useAuth } from "../context/AuthContext";
+import { setupResponseInterceptor } from "../services/api";
 import { isTokenValid } from "../utils/jwt";
 
 export default function RootLayout() {
@@ -12,14 +13,15 @@ export default function RootLayout() {
 }
 
 function MainLayout() {
-  const { dataReturn } = useAuth();
+  const { dataReturn, logout } = useAuth();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (dataReturn?.token && isTokenValid(dataReturn.token)) {
+        setupResponseInterceptor(logout);
         router.replace("/principal/page");
       } else {
-        router.replace("/(auth)/page"); 
+        router.replace("/(auth)/page");
       }
     }, 500);
 
