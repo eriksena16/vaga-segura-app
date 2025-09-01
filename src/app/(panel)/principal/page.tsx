@@ -43,6 +43,7 @@ const quickActions: QuickAction[] = [
     icon: 'local-parking',
     color: '#3B82F6',
     routeName: '/vagas/page',
+    params: { available: 'true' },
   },
   {
     id: '4',

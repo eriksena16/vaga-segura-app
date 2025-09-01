@@ -1,6 +1,7 @@
 import { DataProps } from "../context/AuthContext";
 import { erroProps } from "../types/errorTypes";
 import { UserLogin, UserPost } from "../types/userTypes";
+import { handleApiResponse } from "../utils/ApiResponse";
 import { AUTH_LOGIN, AUTH_REGISTER, NEXT_PUBLIC_API_URL } from "../utils/endpoints";
 import api, { setupApiToken } from "./api";
 
@@ -39,7 +40,7 @@ export async function loginUser(
   userlogin: UserLogin
 ): Promise<DataProps> {
   try {
-
+    console.log("URL da API:", NEXT_PUBLIC_API_URL + AUTH_LOGIN);
 
     const response = await api.post(
       AUTH_LOGIN,
@@ -49,12 +50,14 @@ export async function loginUser(
       },
       { timeout: 5000 }
     );
+    const dataprops = handleApiResponse<DataProps>(response);
+    console.log("Token de acesso:", dataprops?.token);
+    
+    await setupApiToken(dataprops?.token);
+    return dataprops;
 
-    console.log("URL da API:", NEXT_PUBLIC_API_URL + AUTH_LOGIN);
-
-    await setupApiToken(response?.data.token);
-    return response?.data;
   } catch (error: any) {
     throw error;
   }
 }
+

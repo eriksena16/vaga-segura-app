@@ -10,8 +10,9 @@ interface FooterProps {
 const Footer: React.FC<FooterProps> = ({ active }) => {
   const pathname = usePathname();
 
-  const buttons: { key: "/principal/page" | "/list/page"; icon: React.ComponentProps<typeof Ionicons>['name']; label: string }[] = [
+  const buttons: { key: "/principal/page" | "/list/page" | "/vagas/page"; icon: React.ComponentProps<typeof Ionicons>['name']; label: string }[] = [
     { key: '/principal/page', icon: 'home-outline', label: 'Home' },
+    { key: '/vagas/page', icon: 'car-sport-outline', label: 'Vagas' },
     { key: '/list/page', icon: 'people-outline', label: 'Clientes' },
   ];
 

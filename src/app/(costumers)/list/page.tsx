@@ -15,10 +15,10 @@ import {
 } from "react-native";
 import styles from "./styles";
 
-export default function CustomerList({ customers }: CustomerListProps) {
+export default function CustomerList({ costumers }: CustomerListProps) {
   const [filters, setFilters] = useState({ number: "", plate: "", phone: "" });
   const [modalVisible, setModalVisible] = useState(false);
-  const [customerList, setCustomers] = useState<CostumerProps[]>(customers || []);
+  const [customerList, setCustomers] = useState<CostumerProps[]>(costumers || []);
 
   const params = useSearchParams();
 
@@ -48,7 +48,7 @@ export default function CustomerList({ customers }: CustomerListProps) {
         <Text style={styles.customerName}>{item.name}</Text>
         <Text style={styles.customerPlate}>Placa: {item.plate}</Text>
         <Text style={styles.customerPlate}>Telefone: {item.phone}</Text>
-        <Text style={styles.customerPlate}>Vencimento: {item.dueDay}</Text>
+        <Text style={styles.customerPlate}>Dia de vencimento: {item.dueDay}</Text>
         <Text style={styles.customerPlate}>Número da vaga: {item.parking?.location}</Text>
         <Text style={[styles.customerStatus, item.isPaid ? styles.paid : styles.pending]}>
           {item.isPaid ? "Adimplente" : "Inadimplente"}

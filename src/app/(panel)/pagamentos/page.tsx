@@ -4,7 +4,7 @@ import { confirmePayment, getPayments } from "@/src/services/costumerService";
 import { PaymentListProps, PaymentProps } from "@/src/types/userTypes";
 import { useSearchParams } from "expo-router/build/hooks";
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, FlatList, Modal, RefreshControl, Text, TouchableOpacity, View } from "react-native";
+import { Button, FlatList, Modal, RefreshControl, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import styles from "./styles";
 
 export default function PaymentList({ payments }: PaymentListProps) {
@@ -95,6 +95,7 @@ export default function PaymentList({ payments }: PaymentListProps) {
   );
 
   return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
     <View style={styles.container}>
       <Text style={styles.titulo}>Pagamentos</Text>
 
@@ -141,5 +142,6 @@ export default function PaymentList({ payments }: PaymentListProps) {
         />
       )}
     </View>
+    </SafeAreaView>
   );
 }

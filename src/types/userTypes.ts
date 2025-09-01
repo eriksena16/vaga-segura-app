@@ -54,13 +54,19 @@ export interface ParkingProps {
   id: string
   status: string
   location: string
+  costumer?: CostumerProps
 }
 
 export interface CustomerListProps {
-  customers: CostumerProps[];
+  costumers: CostumerProps[];
   paid?: boolean;
 };
 export interface PaymentListProps {
   payments: PaymentProps[];
   paid?: boolean;
+};
+
+export interface ParkingListProps {
+  parkings: ParkingProps[];
+  available?: boolean;
 };

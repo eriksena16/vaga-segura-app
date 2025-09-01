@@ -15,10 +15,34 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
+// export function setupResponseInterceptor(logout: () => void) {
+//   api.interceptors.response.use(
+//     (response) => {
+//       // Aqui você pode tratar sucesso de forma centralizada, se quiser
+//       if (response.data && !response.data.success && response.data.resons) {
+//         return Promise.reject(new Error(response.data.resons.join(", ")));
+//       }
+//       return response;
+//     },
+//     (error: AxiosError) => {
+//       if (error.response?.status === 401) {
+//         logout();
+//       }
+
+//       if (error.response?.data) {
+//         const apiData = error.response.data as any;
+//         if (apiData.resons) {
+//           return Promise.reject(new Error(apiData.resons.join(", ")));
+//         }
+//       }
+
+//       return Promise.reject(error);
+//     }
+//   );
+// }
 export function setupResponseInterceptor(logout: () => void) {
   api.interceptors.response.use(
     (response) => {
-      // Aqui você pode tratar sucesso de forma centralizada, se quiser
       if (response.data && !response.data.success && response.data.resons) {
         return Promise.reject(new Error(response.data.resons.join(", ")));
       }
@@ -34,12 +58,19 @@ export function setupResponseInterceptor(logout: () => void) {
         if (apiData.resons) {
           return Promise.reject(new Error(apiData.resons.join(", ")));
         }
+        if (apiData.message) {
+          return Promise.reject(new Error(apiData.message));
+        }
       }
 
-      return Promise.reject(error);
+      // garante que sempre seja um Error
+      return Promise.reject(
+        new Error(error.message || "Erro desconhecido ao chamar a API")
+      );
     }
   );
 }
+
 
 // Função para forçar setar ou remover token manualmente, se necessário
 export async function setupApiToken(token?: string) {
