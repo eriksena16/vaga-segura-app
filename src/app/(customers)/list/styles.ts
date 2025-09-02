@@ -20,7 +20,7 @@ export default StyleSheet.create({
   filterButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.secundatyBlue,
+    backgroundColor: Colors.secundaryBlue,
     padding: 12,
     marginTop: 10,
     borderRadius: 12,
@@ -139,7 +139,7 @@ export default StyleSheet.create({
   right: 20,
   flexDirection: "row",
   alignItems: "center",
-  backgroundColor: Colors.secundatyBlue,
+  backgroundColor: Colors.secundaryBlue,
   paddingVertical: 12,
   paddingHorizontal: 20,
   borderRadius: 30,

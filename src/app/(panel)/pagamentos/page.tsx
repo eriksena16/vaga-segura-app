@@ -108,8 +108,8 @@ export default function PaymentList({ payments }: PaymentListProps) {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            colors={[Colors.secundatyBlue]}
-            tintColor={Colors.secundatyBlue}
+            colors={[Colors.secundaryBlue]}
+            tintColor={Colors.secundaryBlue}
           />
         }
       />

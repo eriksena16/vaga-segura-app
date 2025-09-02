@@ -2,18 +2,19 @@ import Colors from "@/constants/Colors";
 import { getParkings } from "@/src/services/customerService";
 import { ParkingListProps, ParkingProps } from "@/src/types/userTypes";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { useSearchParams } from "expo-router/build/hooks";
 import { useCallback, useEffect, useState } from "react";
 import {
-    FlatList,
-    Modal,
-    Pressable,
-    RefreshControl,
-    SafeAreaView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  FlatList,
+  Modal,
+  Pressable,
+  RefreshControl,
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import styles from "../../(customers)/list/styles";
 
@@ -169,14 +170,15 @@ export default function ParkingList({ parkings }: ParkingListProps) {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            colors={[Colors.secundatyBlue]}
-            tintColor={Colors.secundatyBlue}
+            colors={[Colors.secundaryBlue]}
+            tintColor={Colors.secundaryBlue}
           />
         }
       />
 
       {/* Botão Adicionar Vaga */}
-      <TouchableOpacity style={styles.addButton}>
+      <TouchableOpacity style={styles.addButton}
+        onPress={() => router.push('/(panel)/vagas/createVaga')}>
         <Ionicons name="add" size={24} color="#fff" />
         <Text style={styles.addButtonText}>Adicionar Vaga</Text>
       </TouchableOpacity>

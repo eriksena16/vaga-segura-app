@@ -4,7 +4,7 @@ export default {
   gray: "#aaaaaa",
 
   principalWhite: "#FFFFFF",
-  secundatyBlue: "#3B82F6",
+  secundaryBlue: "#3B82F6",
   blackBlue: "#1E3A8A",
   green: "#5bc711",
   red: "#ff0000",

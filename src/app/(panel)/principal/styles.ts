@@ -50,7 +50,7 @@ export default StyleSheet.create({
   indicatorValue: { fontSize: 24, fontWeight: 'bold', color: Colors.blackBlue },
 
   progressBarBackground: { height: 10, backgroundColor: Colors.gray, borderRadius: 5, marginTop: 5 },
-  progressBarFill: { height: 10, backgroundColor: Colors.secundatyBlue, borderRadius: 5 },
+  progressBarFill: { height: 10, backgroundColor: Colors.secundaryBlue, borderRadius: 5 },
   progressText: { marginTop: 5, color: Colors.blackBlue },
 
 });
