@@ -1,24 +1,24 @@
-import { getCostumers } from "@/src/services/costumerService";
-import { CostumerProps, CustomerListProps } from "@/src/types/userTypes";
+import { getCustomers } from "@/src/services/customerService";
+import { CustomerListProps, CustomerProps } from "@/src/types/userTypes";
 import { Ionicons } from "@expo/vector-icons";
 import { useSearchParams } from "expo-router/build/hooks";
 import { useEffect, useState } from "react";
 import {
-  FlatList,
-  Modal,
-  Pressable,
-  SafeAreaView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    FlatList,
+    Modal,
+    Pressable,
+    SafeAreaView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import styles from "./styles";
 
-export default function CustomerList({ costumers }: CustomerListProps) {
+export default function CustomerList({ customers }: CustomerListProps) {
   const [filters, setFilters] = useState({ number: "", plate: "", phone: "" });
   const [modalVisible, setModalVisible] = useState(false);
-  const [customerList, setCustomers] = useState<CostumerProps[]>(costumers || []);
+  const [customerList, setCustomers] = useState<CustomerProps[]>(customers || []);
 
   const params = useSearchParams();
 
@@ -31,7 +31,7 @@ export default function CustomerList({ costumers }: CustomerListProps) {
   async function fetchCustomers() {
     try {
       console.log("Filtro paid:", paidFilter);
-      const response = await getCostumers({ paid: paidFilter });
+      const response = await getCustomers({ paid: paidFilter });
       setCustomers(response);
     } catch (error) {
       console.error("Erro ao buscar clientes:", error);
@@ -42,7 +42,7 @@ export default function CustomerList({ costumers }: CustomerListProps) {
     fetchCustomers();
   }, [paidFilter]);
 
-  const renderItem = ({ item }: { item: CostumerProps }) => (
+  const renderItem = ({ item }: { item: CustomerProps }) => (
     <View style={styles.customerCard}>
       <View style={styles.customerInfo}>
         <Text style={styles.customerName}>{item.name}</Text>

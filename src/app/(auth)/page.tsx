@@ -9,8 +9,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState } from "react";
 import { Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import styles from "./styles";
-import { router } from "expo-router";
-import { delay } from "@/src/utils/delay";
 
 export default function Login() {
   const { login } = useAuth();
@@ -50,8 +48,8 @@ export default function Login() {
       const response = await loginUser(form);
 
       login({ token: response?.token });
-       await delay(2000);
-       router.replace('/principal/page');
+      //  await delay(2000);
+      //  router.replace('/principal/page');
 
     } catch (error: any) {
       setErrorMessage(error.response.data?.resons);

@@ -1,21 +1,21 @@
 import Colors from "@/constants/Colors";
-import { getParkings } from "@/src/services/costumerService";
+import { getParkings } from "@/src/services/customerService";
 import { ParkingListProps, ParkingProps } from "@/src/types/userTypes";
 import { Ionicons } from "@expo/vector-icons";
 import { useSearchParams } from "expo-router/build/hooks";
 import { useCallback, useEffect, useState } from "react";
 import {
-  FlatList,
-  Modal,
-  Pressable,
-  RefreshControl,
-  SafeAreaView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    FlatList,
+    Modal,
+    Pressable,
+    RefreshControl,
+    SafeAreaView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
-import styles from "../../(costumers)/list/styles";
+import styles from "../../(customers)/list/styles";
 
 export default function ParkingList({ parkings }: ParkingListProps) {
   const [filters, setFilters] = useState({ number: "", plate: "", phone: "" });
@@ -67,11 +67,11 @@ export default function ParkingList({ parkings }: ParkingListProps) {
       <View style={styles.customerCard}>
         <View style={styles.customerInfo}>
           <Text style={styles.customerName}>Vaga: {item.location}</Text>
-          {item.costumer && (
+          {item.customer && (
             <>
-              <Text style={styles.customerPlate}>Cliente: {item.costumer?.name}</Text>
-              <Text style={styles.customerPlate}>Placa: {item.costumer?.plate}</Text>
-              <Text style={styles.customerPlate}>Telefone: {item.costumer?.phone}</Text>
+              <Text style={styles.customerPlate}>Cliente: {item.customer?.name}</Text>
+              <Text style={styles.customerPlate}>Placa: {item.customer?.plate}</Text>
+              <Text style={styles.customerPlate}>Telefone: {item.customer?.phone}</Text>
             </>
           )}
           <Text style={[styles.customerStatus, status.style]}>

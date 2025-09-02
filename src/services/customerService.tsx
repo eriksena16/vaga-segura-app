@@ -1,22 +1,22 @@
-import { CostumerProps, ParkingProps, PaymentProps } from "../types/userTypes";
+import { CustomerProps, ParkingProps, PaymentProps } from "../types/userTypes";
 import { handleApiResponse } from "../utils/ApiResponse";
-import { COSTUMERS, NEXT_PUBLIC_API_URL, PARKINGS, PAYMENTS } from "../utils/endpoints";
+import { CUSTOMERS, NEXT_PUBLIC_API_URL, PARKINGS, PAYMENTS } from "../utils/endpoints";
 import api from "./api";
 
-export async function getCostumers(params?: { paid?: boolean }): Promise<CostumerProps[]> {
+export async function getCustomers(params?: { paid?: boolean }): Promise<CustomerProps[]> {
   // Monta a URL completa com query string, se houver filtro
   const query = params?.paid !== undefined ? `?paid=${params.paid}` : "";
-  const fullUrl = NEXT_PUBLIC_API_URL + COSTUMERS + query;
+  const fullUrl = NEXT_PUBLIC_API_URL + CUSTOMERS + query;
 
   console.log("URL da API:", fullUrl);
 
-  const response = await api.get(COSTUMERS, {
+  const response = await api.get(CUSTOMERS, {
     params: {
       paid: params?.paid
     }
   });
 
-  return handleApiResponse<CostumerProps[]>(response);
+  return handleApiResponse<CustomerProps[]>(response);
 }
 
 export async function getParkings(params?: { available?: boolean }): Promise<ParkingProps[]> {
@@ -53,15 +53,15 @@ export async function getPayments(params?: { paid?: boolean }): Promise<PaymentP
   return handleApiResponse<PaymentProps[]>(response);
 }
 
-export async function confirmePayment(data: { costumerId?: string; paymentId: string }): Promise<void> {
+export async function confirmePayment(data: { customerId?: string; paymentId: string }): Promise<void> {
   try {
 
-    const url = `/costumer/${data.costumerId}/payment-confirm/${data.paymentId}`;
+    const url = `/customer/${data.customerId}/payment-confirm/${data.paymentId}`;
 
     console.log("URL da API:", NEXT_PUBLIC_API_URL + url);
 
     const response = await api.post(url, {
-      costumerId: data.costumerId,
+      customerId: data.customerId,
       paymentId: data.paymentId,
     });
     return handleApiResponse<void>(response);

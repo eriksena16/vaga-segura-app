@@ -101,7 +101,7 @@ export default function DashboardPage() {
         <View style={styles.indicatorsContainer}>
           <View style={styles.indicatorCard}>
             <Text style={styles.indicatorTitle}>Total de Clientes</Text>
-            <Text style={styles.indicatorValue}>{data?.totalCostumers || 0}</Text>
+            <Text style={styles.indicatorValue}>{data?.totalCustomers || 0}</Text>
           </View>
 
           <View style={styles.indicatorCard}>

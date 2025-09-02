@@ -1,6 +1,6 @@
 import ErrorModal from "@/components/errorModal";
 import Colors from "@/constants/Colors";
-import { confirmePayment, getPayments } from "@/src/services/costumerService";
+import { confirmePayment, getPayments } from "@/src/services/customerService";
 import { PaymentListProps, PaymentProps } from "@/src/types/userTypes";
 import { useSearchParams } from "expo-router/build/hooks";
 import React, { useCallback, useEffect, useState } from "react";
@@ -46,7 +46,7 @@ export default function PaymentList({ payments }: PaymentListProps) {
     try {
       // Chama a API para confirmar pagamento
       await confirmePayment({
-        costumerId: paymentSelecionado.costumer?.id,
+        customerId: paymentSelecionado.customer?.id,
         paymentId: paymentSelecionado.id,
       });
 
@@ -68,7 +68,7 @@ export default function PaymentList({ payments }: PaymentListProps) {
 
   const renderItem = ({ item }: { item: PaymentProps }) => (
     <View style={styles.card}>
-      <Text style={styles.cliente}>{item.costumer?.name}</Text>
+      <Text style={styles.cliente}>{item.customer?.name}</Text>
       <Text style={styles.texto}>Valor: R$ {item.amount}</Text>
       <Text style={styles.texto}>Data: {item.dueDate}</Text>
       <Text
@@ -79,7 +79,7 @@ export default function PaymentList({ payments }: PaymentListProps) {
       >
         Status: {item.paymentSatus === "Paid" ? "Pago" : "Pendente"}
       </Text>
-      <Text style={styles.texto}>Número da vaga: {item.costumer?.parking?.location}</Text>
+      <Text style={styles.texto}>Número da vaga: {item.customer?.parking?.location}</Text>
       {item.paymentSatus === "Pending" && (
         <TouchableOpacity
           style={styles.botao}
@@ -124,7 +124,7 @@ export default function PaymentList({ payments }: PaymentListProps) {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text>
-              Confirmar pagamento de {paymentSelecionado?.costumer?.name}?
+              Confirmar pagamento de {paymentSelecionado?.customer?.name}?
             </Text>
             <View style={styles.modalBotoes}>
               <Button title="Cancelar" onPress={() => setModalVisible(false)} />

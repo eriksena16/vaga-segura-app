@@ -22,7 +22,7 @@ export type SpinIconProps = {
 };
 
 export interface DashboardProps {
-  totalCostumers: number;
+  totalCustomers: number;
   availableParking: number;
   occupiedParking: number;
   paymentPending: number;
@@ -30,13 +30,13 @@ export interface DashboardProps {
 
 export interface PaymentProps {
   id: string;
-  costumerId: string;
-  costumer?: CostumerProps;
+  customerId: string;
+  customer?: CustomerProps;
   amount: number;
   dueDate: string;
   paymentSatus: "Pending" | "Paid";
 }
-export interface CostumerProps {
+export interface CustomerProps {
   id: string
   parkingId: string
   parking?: ParkingProps
@@ -54,11 +54,11 @@ export interface ParkingProps {
   id: string
   status: string
   location: string
-  costumer?: CostumerProps
+  customer?: CustomerProps
 }
 
 export interface CustomerListProps {
-  costumers: CostumerProps[];
+  customers: CustomerProps[];
   paid?: boolean;
 };
 export interface PaymentListProps {

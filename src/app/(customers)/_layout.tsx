@@ -3,7 +3,7 @@ import { Stack } from 'expo-router';
 import React from 'react';
 import { SafeAreaView, View } from 'react-native';
 
-export default function CostumersGroupLayout() {
+export default function CustomersGroupLayout() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <View style={{ flex: 1, paddingBottom: 70 }}>

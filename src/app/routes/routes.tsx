@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from '../(auth)/page';
-import ClientesList from '../(costumers)/list/page';
+import ClientesList from '../(customers)/list/page';
 import { default as DashboardPage, default as VagasList } from '../(panel)/principal/page';
 
 const Stack = createNativeStackNavigator();
