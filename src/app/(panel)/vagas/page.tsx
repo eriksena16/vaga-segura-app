@@ -17,6 +17,7 @@ import {
   View,
 } from "react-native";
 import styles from "../../(customers)/list/styles";
+import Header from "@/components/header";
 
 export default function ParkingList({ parkings }: ParkingListProps) {
   const [filters, setFilters] = useState({ number: "", plate: "", phone: "" });
@@ -95,6 +96,7 @@ export default function ParkingList({ parkings }: ParkingListProps) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+      <Header title="Vagas" />
       {/* Top Buttons */}
       <View style={styles.topButtons}>
         <TouchableOpacity

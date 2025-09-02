@@ -13,8 +13,8 @@ export default StyleSheet.create({
   topButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 30,
-    marginBottom: 30,
+    marginTop: 20,
+    marginBottom: 20,
     paddingLeft: 10,
   },
   filterButton: {

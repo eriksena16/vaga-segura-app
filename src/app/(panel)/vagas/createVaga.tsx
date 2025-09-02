@@ -1,3 +1,6 @@
+import ErrorModal from "@/components/errorModal";
+import { createParking, createParkingSpots } from "@/src/services/customerService";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
@@ -7,14 +10,27 @@ export default function CreateVagaScreen() {
     const [numeroVaga, setNumeroVaga] = useState("");
     const [start, setStart] = useState("");
     const [end, setEnd] = useState("");
-
-    const handleSave = () => {
-        if (isMultiple) {
-            console.log(`Criar vagas de ${start} até ${end}`);
-            // aqui você poderia chamar API para criar várias
-        } else {
-            console.log(`Criar vaga número ${numeroVaga}`);
-            // aqui você chama API para criar só uma
+    const [modalVisible, setModalVisible] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const handleSave = async () => {
+        try {
+            if (isMultiple) {
+                console.log(`Criar vagas de ${start} até ${end}`);
+                await createParkingSpots({ startNumber: start, endNumber: end });
+            } else {
+                console.log(`Criar vaga número ${numeroVaga}`);
+                await createParking({ numeroVaga });
+            }
+            router.push("/vagas/page");
+        }
+        catch (error: any) {
+            if (error instanceof Error) {
+                setErrorMessage(error.message);
+            } else {
+                setErrorMessage("Ocorreu um erro inesperado.");
+            }
+        } finally {
+            setModalVisible(false);
         }
     };
 
@@ -69,6 +85,14 @@ export default function CreateVagaScreen() {
                         <Text style={styles.buttonText}>Salvar</Text>
                     </TouchableOpacity>
                 </View>
+
+                 {errorMessage && (
+                        <ErrorModal
+                          visible={!!errorMessage}
+                          message={errorMessage}
+                          onClose={() => setErrorMessage(null)}
+                        />
+                      )}
             </View>
 
         </SafeAreaView>

@@ -1,7 +1,8 @@
+import Header from '@/components/header';
 import { setupApiToken } from '@/src/services/api';
 import { getDashboard } from '@/src/services/dashboardService';
 import { DashboardProps } from '@/src/types/userTypes';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Route } from "expo-router";
 import { router } from 'expo-router';
@@ -52,7 +53,7 @@ const quickActions: QuickAction[] = [
     color: '#3B82F6',
     routeName: '/pagamentos/page',
     params: { paid: 'false' },
-  },
+  }
 ];
 
 export default function DashboardPage() {
@@ -75,11 +76,7 @@ export default function DashboardPage() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.logo}>Dashboard</Text>
-        <Ionicons name="person-circle-outline" size={32} color="#1E3A8A" />
-      </View>
-
+      <Header title="Dashboard" />
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
         {/* Atalhos Rápidos */}
         <Text style={styles.sectionTitle}>Atalhos</Text>

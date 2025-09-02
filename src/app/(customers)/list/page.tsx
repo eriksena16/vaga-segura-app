@@ -14,6 +14,7 @@ import {
     View,
 } from "react-native";
 import styles from "./styles";
+import Header from "@/components/header";
 
 export default function CustomerList({ customers }: CustomerListProps) {
   const [filters, setFilters] = useState({ number: "", plate: "", phone: "" });
@@ -68,6 +69,7 @@ export default function CustomerList({ customers }: CustomerListProps) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+      <Header title="Lista de Clientes" />
       {/* Top Buttons */}
       <View style={styles.topButtons}>
         <TouchableOpacity style={styles.filterButton} onPress={() => setModalVisible(true)}>

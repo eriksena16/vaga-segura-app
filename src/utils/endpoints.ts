@@ -5,5 +5,7 @@ export const AUTH_REGISTER = "/auth/user-create";
 export const DASHBOARD = "/get-dashboard";
 export const CUSTOMERS = "/customers";
 export const PARKINGS = "/parkings";
+export const CREATE_PARKING = "/parking-create";
+export const CREATE_PARKING_SPOT = "/parking-spots-create";
 export const PAYMENTS = "/customer/payments";
 export const CONFIRM_PAYMENT = "/confirm-payment";

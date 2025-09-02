@@ -1,6 +1,6 @@
 import { CustomerProps, ParkingProps, PaymentProps } from "../types/userTypes";
 import { handleApiResponse } from "../utils/ApiResponse";
-import { CUSTOMERS, NEXT_PUBLIC_API_URL, PARKINGS, PAYMENTS } from "../utils/endpoints";
+import { CREATE_PARKING, CREATE_PARKING_SPOT, CUSTOMERS, NEXT_PUBLIC_API_URL, PARKINGS, PAYMENTS } from "../utils/endpoints";
 import api from "./api";
 
 export async function getCustomers(params?: { paid?: boolean }): Promise<CustomerProps[]> {
@@ -21,7 +21,7 @@ export async function getCustomers(params?: { paid?: boolean }): Promise<Custome
 
 export async function getParkings(params?: { available?: boolean }): Promise<ParkingProps[]> {
 
-    // Monta a URL completa com query string, se houver filtro
+  // Monta a URL completa com query string, se houver filtro
   const query = params?.available !== undefined ? `?available=${params.available}` : "";
   const fullUrl = NEXT_PUBLIC_API_URL + PARKINGS + query;
 
@@ -71,4 +71,34 @@ export async function confirmePayment(data: { customerId?: string; paymentId: st
   }
 
 }
+  export async function createParking(data: { numeroVaga: string; }): Promise<void> {
+    try {
+
+      console.log("URL da API:", NEXT_PUBLIC_API_URL + CREATE_PARKING);
+
+      const response = await api.post(CREATE_PARKING, {
+        number: data.numeroVaga
+      });
+      return handleApiResponse<void>(response);
+    }
+    catch (error: any) {
+      throw error;
+    }
+  }
+
+    export async function createParkingSpots(data: { startNumber: string; endNumber: string; }): Promise<void> {
+    try {
+
+      console.log("URL da API:", NEXT_PUBLIC_API_URL + CREATE_PARKING_SPOT);
+
+      const response = await api.post(CREATE_PARKING_SPOT, {
+        startNumber: data.startNumber,
+        endNumber: data.endNumber
+      });
+      return handleApiResponse<void>(response);
+    }
+    catch (error: any) {
+      throw error;
+    }
+  }
 

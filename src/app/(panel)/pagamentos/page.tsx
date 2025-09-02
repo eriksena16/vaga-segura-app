@@ -6,6 +6,7 @@ import { useSearchParams } from "expo-router/build/hooks";
 import React, { useCallback, useEffect, useState } from "react";
 import { Button, FlatList, Modal, RefreshControl, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import styles from "./styles";
+import Header from "@/components/header";
 
 export default function PaymentList({ payments }: PaymentListProps) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -97,7 +98,7 @@ export default function PaymentList({ payments }: PaymentListProps) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
     <View style={styles.container}>
-      <Text style={styles.titulo}>Pagamentos</Text>
+      <Header title="Pagamentos" />
 
       <FlatList
         data={paymentList}
