@@ -4,21 +4,23 @@ import { Ionicons } from "@expo/vector-icons";
 import { useSearchParams } from "expo-router/build/hooks";
 import { useEffect, useState } from "react";
 import {
-    FlatList,
-    Modal,
-    Pressable,
-    SafeAreaView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  FlatList,
+  Modal,
+  Pressable,
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import styles from "./styles";
 import Header from "@/components/header";
+import CustomerFormModal from "@/components/CustomerFormModal";
 
 export default function CustomerList({ customers }: CustomerListProps) {
   const [filters, setFilters] = useState({ number: "", plate: "", phone: "" });
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalFilterVisible, setModalFilterVisible] = useState(false);
+  const [modalCustomerVisible, setModalCustomerVisible] = useState(false);
   const [customerList, setCustomers] = useState<CustomerProps[]>(customers || []);
 
   const params = useSearchParams();
@@ -28,6 +30,11 @@ export default function CustomerList({ customers }: CustomerListProps) {
     paidParam === "true" ? true :
       paidParam === "false" ? false :
         undefined;
+
+  const handleSaveCustomer = (customer: CustomerProps) => {
+    console.log("Cliente salvo:", customer);
+    // Aqui você pode chamar sua API para salvar
+  };
 
   async function fetchCustomers() {
     try {
@@ -72,7 +79,7 @@ export default function CustomerList({ customers }: CustomerListProps) {
       <Header title="Lista de Clientes" />
       {/* Top Buttons */}
       <View style={styles.topButtons}>
-        <TouchableOpacity style={styles.filterButton} onPress={() => setModalVisible(true)}>
+        <TouchableOpacity style={styles.filterButton} onPress={() => setModalFilterVisible(true)}>
           <Ionicons name="filter" size={20} color="#fff" />
           <Text style={styles.filterButtonText}>Filtros</Text>
         </TouchableOpacity>
@@ -82,8 +89,8 @@ export default function CustomerList({ customers }: CustomerListProps) {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        visible={modalFilterVisible}
+        onRequestClose={() => setModalFilterVisible(false)}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
@@ -107,10 +114,10 @@ export default function CustomerList({ customers }: CustomerListProps) {
               onChangeText={text => setFilters({ ...filters, phone: text })}
             />
             <View style={styles.modalButtons}>
-              <Pressable style={styles.closeButton} onPress={() => setModalVisible(false)}>
+              <Pressable style={styles.closeButton} onPress={() => setModalFilterVisible(false)}>
                 <Text style={styles.modalButtonText}>Fechar</Text>
               </Pressable>
-              <Pressable style={styles.applyButton} onPress={() => setModalVisible(false)}>
+              <Pressable style={styles.applyButton} onPress={() => setModalFilterVisible(false)}>
                 <Text style={styles.modalButtonText}>Aplicar</Text>
               </Pressable>
             </View>
@@ -126,13 +133,18 @@ export default function CustomerList({ customers }: CustomerListProps) {
           renderItem={renderItem}
           contentContainerStyle={{ paddingBottom: 120 }} // espaço para botão + footer
         />
-
+        <CustomerFormModal
+          visible={modalCustomerVisible}
+          onClose={() => setModalCustomerVisible(false)}
+          onSave={handleSaveCustomer}
+        />
       </View>
-        {/* Botão Adicionar Cliente */}
-        <TouchableOpacity style={styles.addButton}>
-          <Ionicons name="add" size={24} color="#fff" />
-          <Text style={styles.addButtonText}>Adicionar Cliente</Text>
-        </TouchableOpacity>
+      {/* Botão Adicionar Cliente */}
+      <TouchableOpacity style={styles.addButton}
+      onPress={() => setModalCustomerVisible(true)}>
+        <Ionicons name="add" size={24} color="#fff" />
+        <Text style={styles.addButtonText}>Adicionar Cliente</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

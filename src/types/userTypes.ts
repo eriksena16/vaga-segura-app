@@ -45,9 +45,9 @@ export interface CustomerProps {
   plate: string
   amount: number
   dueDay: number
-  createdAt: string
-  updatedAt: string,
-  isPaid: string
+  createdAt?: string
+  updatedAt?: string,
+  isPaid?: string
 }
 
 export interface ParkingProps {
