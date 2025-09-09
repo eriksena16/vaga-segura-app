@@ -74,8 +74,9 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header */}
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+      <View style={styles.container} >
+         {/* Header */}
       <Header title="Dashboard" />
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
         {/* Atalhos Rápidos */}
@@ -102,21 +103,21 @@ export default function DashboardPage() {
           </View>
 
           <View style={styles.indicatorCard}>
-            <Text style={styles.indicatorTitle}>Vagas Livres / Ocupadas</Text>
+            <Text style={styles.indicatorTitle}> Ocupadas / Vagas Livres</Text>
             <View style={styles.progressBarBackground}>
               <View
                 style={[
                   styles.progressBarFill,
                   {
                     width: data
-                      ? `${(data.availableParking / (data.availableParking + data.occupiedParking)) * 100}%`
+                      ? `${(data.occupiedParking / (data.availableParking + data.occupiedParking)) * 100}%`
                       : '0%',
                   },
                 ]}
               />
             </View>
             <Text style={styles.progressText}>
-              {data?.availableParking || 0} / {data?.occupiedParking || 0}
+              {data?.occupiedParking || 0} / {data?.availableParking || 0}
             </Text>
           </View>
 
@@ -126,6 +127,8 @@ export default function DashboardPage() {
           </View>
         </View>
       </ScrollView>
+      </View>
+     
     </SafeAreaView>
   );
 }

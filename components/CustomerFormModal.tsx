@@ -1,26 +1,29 @@
-import { getParkings } from "@/src/services/customerService";
+import Colors from "@/constants/Colors";
+import { createCustomer, getParkings } from "@/src/services/customerService";
 import { CustomerProps, ParkingProps } from "@/src/types/userTypes";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Button,
-  FlatList,
   Modal,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import PhoneInput from "react-native-phone-number-input";
+import CustomButton from "./CustomButton";
+import ParkingList from "./ParkingList";
 
 type Props = {
   visible: boolean;
   onClose: () => void;
-  onSave: (customer: CustomerProps) => void;
+  onSave: (customer: CustomerProps) => void; // para atualizar a lista no pai
+  fetchCustomers?: () => void; // opcional, para atualizar lista
+  setErrorMessage?: (msg: string) => void; // opcional, para exibir erro
 };
 
-export default function CustomerFormModal({ visible, onClose, onSave }: Props) {
+export default function CustomerFormModal({ visible, onClose, onSave, fetchCustomers, setErrorMessage }: Props) {
   const TypedPhoneInput: any = PhoneInput;
   const [parkings, setParkings] = useState<ParkingProps[]>([]);
   const [parkingId, setParkingId] = useState<string>("");
@@ -29,32 +32,56 @@ export default function CustomerFormModal({ visible, onClose, onSave }: Props) {
   const phoneInput = useRef<PhoneInput>(null);
   const [plate, setPlate] = useState("");
   const [dueDate, setDueDate] = useState("");
+  const [amount, setAmount] = useState("");
 
   const [pickerVisible, setPickerVisible] = useState(false);
   const [searchParking, setSearchParking] = useState("");
 
+  // 🔹 Busca vagas quando modal principal abrir
   useEffect(() => {
     const fetchParkings = async () => {
       if (visible) {
-        const response = await getParkings({ available: true });
-        setParkings(response);
+        try {
+          const response = await getParkings({ available: true });
+          setParkings(response);
+        } catch (err) {
+          console.error("Erro ao buscar vagas:", err);
+        }
       }
     };
     fetchParkings();
   }, [visible]);
 
-  const handleSave = () => {
+  // 🔹 Função de salvar cliente
+  const handleSave = async () => {
     const newCustomer: CustomerProps = {
-      id: "", // gerado no backend
+      id: "",
       parkingId,
       name,
       phone,
       plate,
-      amount: 0,
+      amount: Number(amount) || 0,
       dueDay: Number(dueDate),
     };
-    onSave(newCustomer);
-    onClose();
+
+    try {
+      console.log("Salvando cliente:", newCustomer);
+
+      // Chama API
+      await createCustomer(newCustomer);
+
+      // Atualiza lista de clientes no pai, se existir
+      fetchCustomers?.();
+
+      // Chama onSave para atualizar o estado local do pai
+      onSave(newCustomer);
+
+      // Fecha modal
+      onClose();
+    } catch (error: any) {
+      console.error("Erro ao salvar cliente:", error);
+      setErrorMessage?.(error.message || "Ocorreu um erro inesperado.");
+    }
   };
 
   const selectedParkingLabel =
@@ -66,8 +93,9 @@ export default function CustomerFormModal({ visible, onClose, onSave }: Props) {
         <View style={styles.card}>
           <Text style={styles.title}>Cadastrar Cliente</Text>
 
+          {/* Nome */}
           <View style={styles.inputGroup}>
-            <Ionicons name="person-outline" size={22} color="#555" style={styles.icon} />
+            <Ionicons name="person-outline" size={22} color={Colors.secundaryBlue} style={styles.icon} />
             <TextInput
               placeholder="Nome"
               style={styles.input}
@@ -76,31 +104,16 @@ export default function CustomerFormModal({ visible, onClose, onSave }: Props) {
             />
           </View>
 
-          {/* <View style={styles.inputGroup}>
-            <Ionicons name="call-outline" size={22} color="#555" style={styles.icon} />
-            <TextInput
-              placeholder="Telefone"
-              style={styles.input}
-              value={phone}
-              onChangeText={setPhone}
-              keyboardType="phone-pad"
-            />
-          </View> */}
-
+          {/* Telefone */}
           <View style={styles.inputGroup}>
-            <Ionicons
-              name="call-outline"
-              size={22}
-              color="#555"
-              style={styles.icon}
-            />
+            <Ionicons name="call-outline" size={22} color={Colors.secundaryBlue} style={styles.icon} />
             <TypedPhoneInput
               ref={phoneInput}
               defaultValue={phone}
               defaultCode="BR"
               layout="first"
               onChangeFormattedText={(text: string) => setPhone(text)}
-               placeholder="Telefone"
+              placeholder="Telefone"
               containerStyle={{
                 flex: 1,
                 height: 50,
@@ -115,9 +128,9 @@ export default function CustomerFormModal({ visible, onClose, onSave }: Props) {
             />
           </View>
 
-
+          {/* Placa */}
           <View style={styles.inputGroup}>
-            <Ionicons name="car-outline" size={22} color="#555" style={styles.icon} />
+            <Ionicons name="car-outline" size={22} color={Colors.secundaryBlue} style={styles.icon} />
             <TextInput
               placeholder="Placa"
               style={styles.input}
@@ -126,8 +139,21 @@ export default function CustomerFormModal({ visible, onClose, onSave }: Props) {
             />
           </View>
 
+          {/* Valor da mensalidade */}
           <View style={styles.inputGroup}>
-            <Ionicons name="calendar-outline" size={22} color="#555" style={styles.icon} />
+            <Ionicons name="cash-outline" size={22} color={Colors.secundaryBlue} style={styles.icon} />
+            <TextInput
+              placeholder="R$ 160.00"
+              style={styles.input}
+              value={amount}
+              onChangeText={setAmount}
+              keyboardType="numeric"
+            />
+          </View>
+
+          {/* Dia de vencimento */}
+          <View style={styles.inputGroup}>
+            <Ionicons name="calendar-outline" size={22} color={Colors.secundaryBlue} style={styles.icon} />
             <TextInput
               placeholder="Dia de Vencimento"
               style={styles.input}
@@ -137,9 +163,9 @@ export default function CustomerFormModal({ visible, onClose, onSave }: Props) {
             />
           </View>
 
-          {/* Dropdown custom */}
+          {/* Seletor de vaga */}
           <View style={styles.inputGroup}>
-            <Ionicons name="location-outline" size={22} color="#555" style={styles.icon} />
+            <Ionicons name="location-outline" size={22} color={Colors.secundaryBlue} style={styles.icon} />
             <TouchableOpacity
               style={styles.pickerButton}
               onPress={() => {
@@ -148,11 +174,11 @@ export default function CustomerFormModal({ visible, onClose, onSave }: Props) {
               }}
             >
               <Text style={styles.pickerText}>{selectedParkingLabel}</Text>
-              <Ionicons name="chevron-down-outline" size={20} color="#555" />
+              <Ionicons name="chevron-down-outline" size={20} color={Colors.secundaryBlue} />
             </TouchableOpacity>
           </View>
 
-          {/* Modal de seleção */}
+          {/* Modal de seleção de vaga */}
           <Modal
             visible={pickerVisible}
             animationType="slide"
@@ -177,48 +203,32 @@ export default function CustomerFormModal({ visible, onClose, onSave }: Props) {
                   </TouchableOpacity>
                 </View>
 
-                <FlatList
-                  data={parkings.filter((p) =>
-                    p.location?.toLowerCase().includes(searchParking.toLowerCase())
-                  )}
-                  keyExtractor={(item) => item.id}
-                  keyboardShouldPersistTaps="handled"
-                  style={styles.modalList}
-                  renderItem={({ item }) => {
-                    const isSelected = item.id === parkingId;
-                    return (
-                      <TouchableOpacity
-                        style={[styles.dropdownItem, isSelected && styles.dropdownItemSelected]}
-                        onPress={() => {
-                          setParkingId(item.id);
-                          setPickerVisible(false);
-                        }}
-                      >
-                        <Text
-                          style={[
-                            styles.dropdownItemText,
-                            isSelected && { fontWeight: "700" },
-                          ]}
-                        >
-                          Vaga: {item.location}
-                        </Text>
-                        {isSelected && <Ionicons name="checkmark" size={18} color="#3B82F6" />}
-                      </TouchableOpacity>
-                    );
-                  }}
-                  ListEmptyComponent={
-                    <View style={{ padding: 12 }}>
-                      <Text style={{ color: "#666" }}>Nenhuma vaga encontrada</Text>
-                    </View>
-                  }
+                <ParkingList
+                  parkings={parkings}
+                  searchParking={searchParking}
+                  parkingId={parkingId}
+                  setParkingId={setParkingId}
+                  setPickerVisible={setPickerVisible}
+                  styles={styles}
                 />
               </View>
             </View>
           </Modal>
 
+          {/* Ações */}
           <View style={styles.actions}>
-            <Button title="Cancelar" onPress={onClose} color="#999" />
-            <Button title="Salvar" onPress={handleSave} />
+            <CustomButton
+              title="Fechar"
+              onPress={onClose}
+              color={Colors.gray}
+              size="medium"
+            />
+            <CustomButton
+              title="Salvar"
+              onPress={handleSave} // 🔹 Corrigido aqui
+              color={Colors.secundaryBlue}
+              size="medium"
+            />
           </View>
         </View>
       </View>

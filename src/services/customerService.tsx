@@ -1,16 +1,16 @@
 import { CustomerProps, ParkingProps, PaymentProps } from "../types/userTypes";
 import { handleApiResponse } from "../utils/ApiResponse";
-import { CREATE_PARKING, CREATE_PARKING_SPOT, CUSTOMERS, NEXT_PUBLIC_API_URL, PARKINGS, PAYMENTS } from "../utils/endpoints";
+import * as Endpoints from "../utils/endpoints";
 import api from "./api";
 
 export async function getCustomers(params?: { paid?: boolean }): Promise<CustomerProps[]> {
   // Monta a URL completa com query string, se houver filtro
   const query = params?.paid !== undefined ? `?paid=${params.paid}` : "";
-  const fullUrl = NEXT_PUBLIC_API_URL + CUSTOMERS + query;
+  const fullUrl = Endpoints.NEXT_PUBLIC_API_URL + Endpoints.CUSTOMERS + query;
 
   console.log("URL da API:", fullUrl);
 
-  const response = await api.get(CUSTOMERS, {
+  const response = await api.get(Endpoints.CUSTOMERS, {
     params: {
       paid: params?.paid
     }
@@ -23,11 +23,11 @@ export async function getParkings(params?: { available?: boolean }): Promise<Par
 
   // Monta a URL completa com query string, se houver filtro
   const query = params?.available !== undefined ? `?available=${params.available}` : "";
-  const fullUrl = NEXT_PUBLIC_API_URL + PARKINGS + query;
+  const fullUrl = Endpoints.NEXT_PUBLIC_API_URL + Endpoints.PARKINGS + query;
 
   console.log("URL da API:", fullUrl);
 
-  const response = await api.get(PARKINGS, {
+  const response = await api.get(Endpoints.PARKINGS, {
     params: {
       available: params?.available
     }
@@ -40,11 +40,11 @@ export async function getParkings(params?: { available?: boolean }): Promise<Par
 export async function getPayments(params?: { paid?: boolean }): Promise<PaymentProps[]> {
   // Monta a URL completa com query string, se houver filtro
   const query = params?.paid !== undefined ? `?paid=${params.paid}` : "";
-  const fullUrl = NEXT_PUBLIC_API_URL + PAYMENTS + query;
+  const fullUrl = Endpoints.NEXT_PUBLIC_API_URL + Endpoints.PAYMENTS + query;
 
   console.log("URL da API:", fullUrl);
 
-  const response = await api.get(PAYMENTS, {
+  const response = await api.get(Endpoints.PAYMENTS, {
     params: {
       paid: params?.paid
     }
@@ -58,7 +58,7 @@ export async function confirmePayment(data: { customerId?: string; paymentId: st
 
     const url = `/customer/${data.customerId}/payment-confirm/${data.paymentId}`;
 
-    console.log("URL da API:", NEXT_PUBLIC_API_URL + url);
+    console.log("URL da API:", Endpoints.NEXT_PUBLIC_API_URL + url);
 
     const response = await api.post(url, {
       customerId: data.customerId,
@@ -71,12 +71,25 @@ export async function confirmePayment(data: { customerId?: string; paymentId: st
   }
 
 }
+export async function createCustomer(data: CustomerProps ): Promise<void> {
+    try {
+
+      console.log("URL da API:", Endpoints.NEXT_PUBLIC_API_URL + Endpoints.CREATE_CUSTOMER);
+
+      const response = await api.post(Endpoints.CREATE_CUSTOMER, data);
+      
+      return handleApiResponse<void>(response);
+    }
+    catch (error: any) {
+      throw error;
+    }
+  }
   export async function createParking(data: { numeroVaga: string; }): Promise<void> {
     try {
 
-      console.log("URL da API:", NEXT_PUBLIC_API_URL + CREATE_PARKING);
+      console.log("URL da API:", Endpoints.NEXT_PUBLIC_API_URL + Endpoints.CREATE_PARKING);
 
-      const response = await api.post(CREATE_PARKING, {
+      const response = await api.post(Endpoints.CREATE_PARKING, {
         number: data.numeroVaga
       });
       return handleApiResponse<void>(response);
@@ -89,9 +102,9 @@ export async function confirmePayment(data: { customerId?: string; paymentId: st
     export async function createParkingSpots(data: { startNumber: string; endNumber: string; }): Promise<void> {
     try {
 
-      console.log("URL da API:", NEXT_PUBLIC_API_URL + CREATE_PARKING_SPOT);
+      console.log("URL da API:", Endpoints.NEXT_PUBLIC_API_URL + Endpoints.CREATE_PARKING_SPOT);
 
-      const response = await api.post(CREATE_PARKING_SPOT, {
+      const response = await api.post(Endpoints.CREATE_PARKING_SPOT, {
         startNumber: data.startNumber,
         endNumber: data.endNumber
       });

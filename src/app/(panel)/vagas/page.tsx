@@ -96,6 +96,7 @@ export default function ParkingList({ parkings }: ParkingListProps) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+      <View style={styles.container} >
       <Header title="Vagas" />
       {/* Top Buttons */}
       <View style={styles.topButtons}>
@@ -184,6 +185,7 @@ export default function ParkingList({ parkings }: ParkingListProps) {
         <Ionicons name="add" size={24} color="#fff" />
         <Text style={styles.addButtonText}>Adicionar Vaga</Text>
       </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }

@@ -1,4 +1,6 @@
+import CustomButton from "@/components/CustomButton";
 import ErrorModal from "@/components/errorModal";
+import Colors from "@/constants/Colors";
 import { createParking, createParkingSpots } from "@/src/services/customerService";
 import { router } from "expo-router";
 import React, { useState } from "react";
@@ -81,18 +83,21 @@ export default function CreateVagaScreen() {
                         </View>
                     )}
 
-                    <TouchableOpacity style={styles.button} onPress={handleSave}>
-                        <Text style={styles.buttonText}>Salvar</Text>
-                    </TouchableOpacity>
+                    <CustomButton
+                        title="Salvar"
+                        onPress={handleSave}
+                        color={Colors.secundaryBlue}
+                        size="large"
+                    />
                 </View>
 
-                 {errorMessage && (
-                        <ErrorModal
-                          visible={!!errorMessage}
-                          message={errorMessage}
-                          onClose={() => setErrorMessage(null)}
-                        />
-                      )}
+                {errorMessage && (
+                    <ErrorModal
+                        visible={!!errorMessage}
+                        message={errorMessage}
+                        onClose={() => setErrorMessage(null)}
+                    />
+                )}
             </View>
 
         </SafeAreaView>

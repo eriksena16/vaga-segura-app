@@ -1,3 +1,7 @@
+import CustomButton from "@/components/CustomButton";
+import CustomerFormModal from "@/components/CustomerFormModal";
+import Header from "@/components/header";
+import Colors from "@/constants/Colors";
 import { getCustomers } from "@/src/services/customerService";
 import { CustomerListProps, CustomerProps } from "@/src/types/userTypes";
 import { Ionicons } from "@expo/vector-icons";
@@ -6,23 +10,20 @@ import { useEffect, useState } from "react";
 import {
   FlatList,
   Modal,
-  Pressable,
   SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import styles from "./styles";
-import Header from "@/components/header";
-import CustomerFormModal from "@/components/CustomerFormModal";
 
 export default function CustomerList({ customers }: CustomerListProps) {
   const [filters, setFilters] = useState({ number: "", plate: "", phone: "" });
   const [modalFilterVisible, setModalFilterVisible] = useState(false);
   const [modalCustomerVisible, setModalCustomerVisible] = useState(false);
   const [customerList, setCustomers] = useState<CustomerProps[]>(customers || []);
-
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const params = useSearchParams();
 
   const paidParam = params.get?.("paid");
@@ -31,10 +32,7 @@ export default function CustomerList({ customers }: CustomerListProps) {
       paidParam === "false" ? false :
         undefined;
 
-  const handleSaveCustomer = (customer: CustomerProps) => {
-    console.log("Cliente salvo:", customer);
-    // Aqui você pode chamar sua API para salvar
-  };
+
 
   async function fetchCustomers() {
     try {
@@ -76,6 +74,7 @@ export default function CustomerList({ customers }: CustomerListProps) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+      <View style={styles.container} >
       <Header title="Lista de Clientes" />
       {/* Top Buttons */}
       <View style={styles.topButtons}>
@@ -114,18 +113,25 @@ export default function CustomerList({ customers }: CustomerListProps) {
               onChangeText={text => setFilters({ ...filters, phone: text })}
             />
             <View style={styles.modalButtons}>
-              <Pressable style={styles.closeButton} onPress={() => setModalFilterVisible(false)}>
-                <Text style={styles.modalButtonText}>Fechar</Text>
-              </Pressable>
-              <Pressable style={styles.applyButton} onPress={() => setModalFilterVisible(false)}>
-                <Text style={styles.modalButtonText}>Aplicar</Text>
-              </Pressable>
+              <CustomButton
+                title="Fechar"
+                onPress={() => setModalFilterVisible(false)}
+                color={Colors.gray}
+                size="medium"
+              />
+
+              <CustomButton
+                title="Aplicar"
+                onPress={() => setModalFilterVisible(false)}
+                color={Colors.secundaryBlue}
+                size="medium"
+
+              />
             </View>
           </View>
         </View>
       </Modal>
 
-      {/* Lista de clientes + botão adicionar */}
       <View style={{ flex: 1 }}>
         <FlatList
           data={customerList}
@@ -136,15 +142,20 @@ export default function CustomerList({ customers }: CustomerListProps) {
         <CustomerFormModal
           visible={modalCustomerVisible}
           onClose={() => setModalCustomerVisible(false)}
-          onSave={handleSaveCustomer}
+         onSave={(newCustomer: CustomerProps) => {
+          setCustomers((prev) => [...prev, newCustomer]);
+        }}
+          fetchCustomers={fetchCustomers}
+          setErrorMessage={setErrorMessage}
         />
       </View>
       {/* Botão Adicionar Cliente */}
       <TouchableOpacity style={styles.addButton}
-      onPress={() => setModalCustomerVisible(true)}>
+        onPress={() => setModalCustomerVisible(true)}>
         <Ionicons name="add" size={24} color="#fff" />
         <Text style={styles.addButtonText}>Adicionar Cliente</Text>
       </TouchableOpacity>
+     </View>
     </SafeAreaView>
   );
 }
